@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const imageSchema = new mongoose.Schema(
+const mediaSchema = new mongoose.Schema(
   {
     url: { type: String, required: true },
     publicId: { type: String, required: true },
@@ -16,7 +16,8 @@ const productSchema = new mongoose.Schema(
     precioOferta: { type: Number, default: null, min: 0 },
     stock: { type: Number, required: true, min: 0, default: 0 },
     categoria: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
-    imagenes: [imageSchema],
+    imagenes: [mediaSchema],
+    videos: [mediaSchema],
     tags: [{ type: String, trim: true }],
     isActive: { type: Boolean, default: true },
     deletedAt: { type: Date, default: null },

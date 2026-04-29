@@ -34,14 +34,24 @@ const OrdersAdmin = () => {
   };
 
   const handleFinalize = async (order, force = false) => {
-    const confirmMsg = force
-      ? `⚠️ El stock es insuficiente. ¿Descontar de todas formas y dejar stock en negativo?`
-      : `¿Descontar el stock del pedido ${order.codigo}? Esta acción no se puede deshacer.`;
+    const isRejectedOrCanceled = ['rechazado', 'cancelado'].includes(order.estadoPago);
+    
+    let confirmMsg;
+    if (isRejectedOrCanceled) {
+      confirmMsg = `¿Finalizar el pedido ${order.codigo} (${order.estadoPago})? El stock no será modificado.`;
+    } else {
+      confirmMsg = force
+        ? `⚠️ El stock es insuficiente. ¿Descontar de todas formas y dejar stock en negativo?`
+        : `¿Descontar el stock del pedido ${order.codigo}? Esta acción no se puede deshacer.`;
+    }
+    
     if (!window.confirm(confirmMsg)) return;
     setFinalizingId(order._id);
     try {
       const result = await finalizeOrder({ id: order._id, force }).unwrap();
-      if (result.agotados?.length > 0) {
+      if (isRejectedOrCanceled) {
+        toast.success(`Pedido ${order.estadoPago} finalizado`);
+      } else if (result.agotados?.length > 0) {
         const nombres = result.agotados.map((p) => p.nombre).join(', ');
         toast(
           (t) => (
@@ -140,7 +150,7 @@ const OrdersAdmin = () => {
                   {new Date(order.createdAt).toLocaleDateString('es-AR')}
                 </td>
                 <td className="px-4 py-3">
-                  {!order.stockDeducido && order.estadoPago === 'aprobado' && (order.estadoEnvio === 'entregado' || order.estadoEnvio === 'enviado') ? (
+                  {!order.stockDeducido && ['aprobado', 'rechazado', 'cancelado'].includes(order.estadoPago) && (order.estadoPago !== 'aprobado' || order.estadoEnvio === 'entregado' || order.estadoEnvio === 'enviado') ? (
                     <button
                       onClick={() => handleFinalize(order)}
                       disabled={finalizingId === order._id || finalizing}

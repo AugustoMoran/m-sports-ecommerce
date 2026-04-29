@@ -41,6 +41,14 @@ export const productsApi = baseApi.injectEndpoints({
       query: ({ id, publicId }) => ({ url: `/products/${id}/images`, method: 'DELETE', body: { publicId } }),
       invalidatesTags: (result, error, { id }) => [{ type: 'Product', id }],
     }),
+    addProductVideo: builder.mutation({
+      query: ({ id, url, publicId }) => ({ url: `/products/${id}/videos`, method: 'POST', body: { url, publicId } }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Product', id }],
+    }),
+    removeProductVideo: builder.mutation({
+      query: ({ id, publicId }) => ({ url: `/products/${id}/videos`, method: 'DELETE', body: { publicId } }),
+      invalidatesTags: (result, error, { id }) => [{ type: 'Product', id }],
+    }),
     getCategories: builder.query({
       query: () => '/categories',
       providesTags: ['Category'],
@@ -71,6 +79,8 @@ export const {
   useDeleteProductMutation,
   useAddProductImageMutation,
   useRemoveProductImageMutation,
+  useAddProductVideoMutation,
+  useRemoveProductVideoMutation,
   useGetCategoriesQuery,
   useCreateCategoryMutation,
   useUpdateCategoryMutation,

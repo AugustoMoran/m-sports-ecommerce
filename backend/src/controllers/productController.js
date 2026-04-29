@@ -87,4 +87,23 @@ const removeImage = async (req, res, next) => {
   }
 };
 
-module.exports = { getProducts, getProduct, getRelated, getSuggestions, createProduct, updateProduct, deleteProduct, addImage, removeImage };
+const addVideo = async (req, res, next) => {
+  try {
+    const { url, publicId } = req.body;
+    const product = await productService.addProductVideo(req.params.id, url, publicId);
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeVideo = async (req, res, next) => {
+  try {
+    const product = await productService.removeProductVideo(req.params.id, req.body.publicId);
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getProducts, getProduct, getRelated, getSuggestions, createProduct, updateProduct, deleteProduct, addImage, removeImage, addVideo, removeVideo };

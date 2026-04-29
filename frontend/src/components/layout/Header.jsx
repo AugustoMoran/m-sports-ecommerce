@@ -81,12 +81,7 @@ const Header = () => {
                 {menuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
               </button>
               <Link to="/" className="flex items-center gap-2" onClick={() => dispatch(closeMenu())}>
-                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                  <span className="text-amber-400 font-bold text-sm">M</span>
-                </div>
-                <span className="font-bold text-lg text-gray-900 hidden sm:block">
-                  {import.meta.env.VITE_STORE_NAME || 'Mi Tienda'}
-                </span>
+                <img src="/logo-header.png" alt="Logo" className="h-20 w-auto" />
               </Link>
             </div>
 

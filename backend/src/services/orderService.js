@@ -72,6 +72,8 @@ const createOrder = async ({ userId, guestData, items, cuponCodigo, metodoPago }
     total,
     cupon: cuponCodigo ? cuponCodigo.toUpperCase() : null,
     metodoPago: metodoPago || 'pendiente',
+    estadoPago: 'pendiente',      // Always start as pending; webhook (MP) or admin (WhatsApp) approves
+    estadoEnvio: 'pendiente',     // Always start as pending until admin dispatches
     stockDeducido: false,
   });
 
@@ -151,13 +153,26 @@ const finalizeOrder = async (id, force = false) => {
   const order = await Order.findById(id);
   if (!order) throw Object.assign(new Error('Orden no encontrada.'), { statusCode: 404 });
   if (order.stockDeducido) throw Object.assign(new Error('El stock de este pedido ya fue descontado.'), { statusCode: 400 });
-  if (order.estadoPago !== 'aprobado') {
-    throw Object.assign(new Error('El pedido debe tener pago aprobado para finalizar.'), { statusCode: 400 });
+
+  // Si es rechazado o cancelado: marcar como finalizado SIN deducir stock
+  if (order.estadoPago === 'rechazado' || order.estadoPago === 'cancelado') {
+    order.stockDeducido = true;
+    await order.save();
+    const populated = await Order.findById(order._id).populate('usuario', 'nombre apellido email');
+    return { order: populated, agotados: [], mensaje: `Pedido ${order.estadoPago} finalizado sin deducción de stock.` };
   }
+
+  // Para otros estados, requiere pago aprobado
+  if (order.estadoPago !== 'aprobado') {
+    throw Object.assign(new Error('El pedido debe tener pago aprobado, rechazado o cancelado para finalizar.'), { statusCode: 400 });
+  }
+
+  // Requiere estado de envío 'enviado' o 'entregado'
   if (order.estadoEnvio !== 'entregado' && order.estadoEnvio !== 'enviado') {
     throw Object.assign(new Error('El pedido debe estar en estado "enviado" o "entregado" para finalizar.'), { statusCode: 400 });
   }
 
+  // Deducir stock para pedidos aprobados
   for (const item of order.items) {
     const product = await Product.findById(item.producto);
     if (!product) continue;
@@ -188,6 +203,15 @@ const finalizeOrder = async (id, force = false) => {
   return { order: populated, agotados };
 };
 
+const updateProductStock = async (productId, newStock) => {
+  const product = await Product.findById(productId);
+  if (!product) throw Object.assign(new Error('Producto no encontrado.'), { statusCode: 404 });
+  const oldStock = product.stock;
+  product.stock = Math.max(0, newStock);
+  await product.save();
+  return { productId, oldStock, newStock: product.stock };
+};
+
 module.exports = {
   createOrder,
   getOrders,
@@ -196,4 +220,5 @@ module.exports = {
   updateOrderStatus,
   dispatchOrder,
   finalizeOrder,
+  updateProductStock,
 };

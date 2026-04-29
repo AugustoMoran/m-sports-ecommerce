@@ -6,6 +6,8 @@ const bannerSchema = new mongoose.Schema(
     subtitulo: { type: String, trim: true },
     imagen: { type: String, required: true },
     imagenPublicId: { type: String },
+    video: { type: String, default: '' },
+    videoPublicId: { type: String, default: '' },
     ctaTexto: { type: String, default: 'Ver productos' },
     ctaLink: { type: String, default: '/productos' },
     gradient: { type: String, default: 'from-blue-900/70 to-transparent' },

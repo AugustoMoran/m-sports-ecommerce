@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram, FaWhatsapp, FaTiktok } from 'react-icons/fa';
 import { HiMail, HiPhone } from 'react-icons/hi';
 
 const Footer = () => {
   const waNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '5491100000000';
   const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL || 'https://instagram.com/tutienda';
+  const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://www.tiktok.com';
   const storeName = import.meta.env.VITE_STORE_NAME || 'Mi Tienda';
 
   return (
@@ -14,33 +15,39 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary-400 rounded-lg flex items-center justify-center">
-                <span className="text-gray-900 font-bold text-sm">T</span>
-              </div>
-              <span className="font-bold text-xl text-white">{storeName}</span>
+            <div className="flex items-center gap-3 mb-6">
+              <img src="/logo.png" alt="Logo" className="h-40 w-auto" />
             </div>
-            <p className="text-sm text-gray-400 leading-relaxed mb-4">
-              Tu tienda online de confianza. Productos de calidad con la mejor atención.
+            <p className="text-xl font-extrabold text-white tracking-widest mb-6 text-center md:text-left uppercase drop-shadow-lg">
+              SIN LIMITES
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-6">
               <a
                 href={`https://wa.me/${waNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 bg-green-600 rounded-lg flex items-center justify-center hover:bg-green-500 transition-colors"
+                className="w-20 h-20 bg-green-600 rounded-full flex items-center justify-center hover:bg-green-500 transition-all transform hover:scale-110 shadow-lg"
                 aria-label="WhatsApp"
               >
-                <FaWhatsapp size={18} />
+                <FaWhatsapp size={40} className="text-white" />
               </a>
               <a
                 href={instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-9 h-9 bg-gradient-to-br from-purple-600 to-pink-500 rounded-lg flex items-center justify-center hover:opacity-80 transition-opacity"
+                className="w-20 h-20 bg-gradient-to-br from-purple-600 to-pink-500 rounded-full flex items-center justify-center hover:opacity-90 transition-all transform hover:scale-110 shadow-lg"
                 aria-label="Instagram"
               >
-                <FaInstagram size={18} />
+                <FaInstagram size={40} className="text-white" />
+              </a>
+              <a
+                href={tiktokUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-20 h-20 bg-gray-900 rounded-full flex items-center justify-center hover:bg-gray-800 transition-all transform hover:scale-110 shadow-lg border-2 border-gray-700"
+                aria-label="TikTok"
+              >
+                <FaTiktok size={40} className="text-white" />
               </a>
             </div>
           </div>
@@ -70,6 +77,12 @@ const Footer = () => {
                 <FaInstagram size={14} className="text-pink-400" />
                 <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   Instagram
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <FaTiktok size={14} className="text-gray-300" />
+                <a href={tiktokUrl} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  TikTok
                 </a>
               </li>
             </ul>

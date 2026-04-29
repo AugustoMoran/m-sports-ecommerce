@@ -1,0 +1,16 @@
+{
+  "name": "chatbot-widget",
+  "version": "1.0.0",
+  "description": "Widget de chat AI para ecommerce en React.",
+  "main": "ChatWidget.jsx",
+  "module": "ChatWidget.jsx",
+  "types": "index.d.ts",
+  "author": "augustomoran",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "dependencies": {},
+  "keywords": ["chatbot", "react", "ecommerce", "ai", "widget"]
+}

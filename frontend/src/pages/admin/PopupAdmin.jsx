@@ -3,7 +3,7 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import { useGetPopupConfigQuery, useUpdatePopupConfigMutation } from '../../services/popupApi';
 import { useUploadImageMutation } from '../../services/cartApi';
 import toast from 'react-hot-toast';
-import { HiOutlinePhotograph, HiOutlineSave, HiOutlineRefresh } from 'react-icons/hi';
+import { HiOutlinePhotograph, HiOutlineSave, HiOutlineRefresh, HiOutlineFilm, HiX } from 'react-icons/hi';
 import { FaWhatsapp } from 'react-icons/fa';
 
 const DEFAULTS = {
@@ -15,6 +15,8 @@ const DEFAULTS = {
   mensajePrellenado: 'Hola, estuve viendo la página y me gustaría recibir atención personalizada.',
   imagen: '',
   imagenPublicId: '',
+  video: '',
+  videoPublicId: '',
   tiempoAparicion: 5,
 };
 
@@ -25,6 +27,7 @@ const PopupAdmin = () => {
 
   const [form, setForm] = useState(DEFAULTS);
   const [uploading, setUploading] = useState(false);
+  const [newVideoPreview, setNewVideoPreview] = useState('');
 
   useEffect(() => {
     if (config) {
@@ -37,6 +40,8 @@ const PopupAdmin = () => {
         mensajePrellenado: config.mensajePrellenado || '',
         imagen: config.imagen || '',
         imagenPublicId: config.imagenPublicId || '',
+        video: config.video || '',
+        videoPublicId: config.videoPublicId || '',
         tiempoAparicion: config.tiempoAparicion ?? 5,
       });
     }
@@ -59,6 +64,29 @@ const PopupAdmin = () => {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const { url, publicId } = await uploadImage(fd).unwrap();
+      setForm((f) => ({ ...f, video: url, videoPublicId: publicId }));
+      setNewVideoPreview(URL.createObjectURL(file));
+      toast.success('Video subido');
+    } catch {
+      toast.error('Error al subir video');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveVideo = () => {
+    setForm((f) => ({ ...f, video: '', videoPublicId: '' }));
+    setNewVideoPreview('');
   };
 
   const handleReset = () => setForm(DEFAULTS);
@@ -178,6 +206,37 @@ const PopupAdmin = () => {
               <HiOutlinePhotograph size={16} />
               {uploading ? 'Subiendo...' : 'Subir imagen'}
               <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploading} />
+            </label>
+          </div>
+
+          {/* Video (opcional) */}
+          <div className="card p-5">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Video de fondo (opcional)
+            </label>
+            {form.video ? (
+              <div className="relative mb-3">
+                <video
+                  src={form.video}
+                  className="w-full h-36 object-cover rounded-xl"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveVideo}
+                  className="absolute top-2 right-2 bg-black/60 hover:bg-black text-white rounded-full w-7 h-7 flex items-center justify-center text-xs transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+            ) : (
+              <div className="h-28 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-sm mb-3">
+                Sin video — se usará la imagen de fondo
+              </div>
+            )}
+            <label className="flex items-center gap-2 cursor-pointer w-fit border border-gray-300 hover:border-gray-900 px-3 py-1.5 rounded-lg text-sm text-gray-600 hover:text-gray-900 transition-colors">
+              <HiOutlineFilm size={16} />
+              {uploading ? 'Subiendo...' : 'Subir video'}
+              <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} disabled={uploading} />
             </label>
           </div>
 

@@ -22,6 +22,7 @@ const uploadRoutes = require('./src/routes/upload');
 const webhookRoutes = require('./src/routes/webhook');
 const bannerRoutes = require('./src/routes/banners');
 const popupRoutes = require('./src/routes/popup');
+const chatRoutes = require('./src/routes/chat');
 
 const app = express();
 
@@ -31,7 +32,19 @@ app.use(helmet());
 // CORS
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // En desarrollo, acepta localhost en cualquier puerto
+      if (process.env.NODE_ENV === 'development' && origin?.includes('localhost')) {
+        callback(null, true);
+      } else if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+        callback(null, true);
+      } else if (!origin) {
+        // Requests sin origin (como mobile apps, Postman, etc)
+        callback(null, true);
+      } else {
+        callback(new Error('CORS no permitido'));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -72,6 +85,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/webhook', webhookRoutes);
 app.use('/api/banners', bannerRoutes);
 app.use('/api/popup', popupRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

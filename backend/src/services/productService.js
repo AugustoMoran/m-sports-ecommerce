@@ -3,12 +3,33 @@ const Category = require('../models/Category');
 const { cloudinary } = require('../config/cloudinary');
 
 const getProducts = async ({ page = 1, limit = 12, categoria, search, sort, sinStock }) => {
-  const query = { isActive: true };
 
-  if (categoria) query.categoria = categoria;
-  if (search) query.$text = { $search: search };
-  if (sinStock === 'true' || sinStock === true) query.stock = { $lte: 0 };
+  // --- Validación y limpieza de parámetros ---
+  let cleanPage = parseInt(page) || 1;
+  let cleanLimit = Math.max(1, Math.min(parseInt(limit) || 12, 100));
+  let cleanCategoria = (typeof categoria === 'string') ? categoria.trim() : '';
+  let cleanSearch = (typeof search === 'string') ? search.trim() : '';
+  let cleanSort = (typeof sort === 'string') ? sort.trim() : 'newest';
+  let cleanSinStock = sinStock === 'true' || sinStock === true;
 
+  // --- Construcción de query robusta ---
+  const query = { isActive: true, deletedAt: null };
+  if (cleanCategoria && cleanCategoria !== '' && cleanCategoria !== 'todas' && cleanCategoria !== 'null' && cleanCategoria !== 'undefined') {
+    query.categoria = cleanCategoria;
+  }
+  // Solo usar $text si la búsqueda tiene al menos 2 caracteres
+  if (cleanSearch.length >= 2) {
+    query.$text = { $search: cleanSearch };
+  }
+  if (cleanSinStock) {
+    query.stock = { $lte: 0 };
+  } else if (cleanCategoria && cleanCategoria !== '' && cleanCategoria !== 'todas' && cleanCategoria !== 'null' && cleanCategoria !== 'undefined') {
+    // Si se filtra por categoría específica, mostrar solo productos con stock > 0
+    query.stock = { $gt: 0 };
+  }
+  // Si es 'todas' o vacío, no filtrar por stock (mostrar todos los productos activos)
+
+  // --- Ordenamiento robusto ---
   const sortOptions = {
     newest: { createdAt: -1 },
     oldest: { createdAt: 1 },
@@ -16,20 +37,23 @@ const getProducts = async ({ page = 1, limit = 12, categoria, search, sort, sinS
     'price-desc': { precio: -1 },
     popular: { vendidos: -1 },
   };
-  const sortBy = sortOptions[sort] || { createdAt: -1 };
+  const sortBy = sortOptions[cleanSort] || sortOptions['newest'];
+
+  // --- Logs para depuración ---
+  // console.log('[getProducts] Query:', query, 'Sort:', sortBy, 'Page:', cleanPage, 'Limit:', cleanLimit);
 
   const total = await Product.countDocuments(query);
   const products = await Product.find(query)
     .populate('categoria', 'nombre')
     .sort(sortBy)
-    .skip((page - 1) * limit)
-    .limit(limit)
+    .skip((cleanPage - 1) * cleanLimit)
+    .limit(cleanLimit)
     .lean();
 
   return {
     products,
-    page: Number(page),
-    pages: Math.ceil(total / limit),
+    page: cleanPage,
+    pages: Math.ceil(total / cleanLimit),
     total,
   };
 };
@@ -73,9 +97,12 @@ const deleteProduct = async (id) => {
   const product = await Product.findById(id);
   if (!product) throw Object.assign(new Error('Producto no encontrado.'), { statusCode: 404 });
 
-  // Delete images from Cloudinary
+  // Delete images and videos from Cloudinary
   for (const img of product.imagenes) {
     await cloudinary.uploader.destroy(img.publicId).catch(() => {});
+  }
+  for (const vid of product.videos) {
+    await cloudinary.uploader.destroy(vid.publicId, { resource_type: 'video' }).catch(() => {});
   }
 
   await product.softDelete();
@@ -97,6 +124,25 @@ const removeProductImage = async (productId, publicId) => {
 
   await cloudinary.uploader.destroy(publicId);
   product.imagenes = product.imagenes.filter((img) => img.publicId !== publicId);
+  return product.save();
+};
+
+const addProductVideo = async (productId, url, publicId) => {
+  const product = await Product.findById(productId);
+  if (!product) throw Object.assign(new Error('Producto no encontrado.'), { statusCode: 404 });
+  if (product.videos.length >= 3) {
+    throw Object.assign(new Error('Máximo 3 videos por producto.'), { statusCode: 400 });
+  }
+  product.videos.push({ url, publicId });
+  return product.save();
+};
+
+const removeProductVideo = async (productId, publicId) => {
+  const product = await Product.findById(productId);
+  if (!product) throw Object.assign(new Error('Producto no encontrado.'), { statusCode: 404 });
+
+  await cloudinary.uploader.destroy(publicId, { resource_type: 'video' });
+  product.videos = product.videos.filter((vid) => vid.publicId !== publicId);
   return product.save();
 };
 
@@ -128,5 +174,7 @@ module.exports = {
   deleteProduct,
   addProductImage,
   removeProductImage,
+  addProductVideo,
+  removeProductVideo,
   getSuggestions,
 };

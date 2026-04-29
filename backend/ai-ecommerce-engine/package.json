@@ -1,0 +1,22 @@
+{
+  "name": "ai-ecommerce-engine",
+  "version": "1.0.0",
+  "description": "Modular AI chatbot engine for ecommerce — zero cost to start, designed to scale to paid providers without code changes.",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": ["ai", "chatbot", "ecommerce", "gemini", "rag", "nodejs", "llm"],
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./config": "./config.js",
+    "./plugins/recommendation": "./plugins/recommendationPlugin.js",
+    "./plugins/analytics": "./plugins/analyticsPlugin.js",
+    "./providers/gemini": "./providers/gemini.js",
+    "./providers/huggingface": "./providers/huggingface.js",
+    "./providers/openai": "./providers/openai.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

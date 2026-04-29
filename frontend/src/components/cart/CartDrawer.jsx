@@ -59,9 +59,9 @@ const CartDrawer = () => {
               {items.map((item) => {
                 const producto = item.producto;
                 const id = producto?._id || producto;
-                const price = producto?.precioOferta || producto?.precio || item.precio || 0;
+                const price = Number(producto?.precioOferta || producto?.precio || 0) || 0;
                 const imagen = producto?.imagenes?.[0]?.url || '';
-                const nombre = producto?.nombre || item.nombre || '';
+                const nombre = producto?.nombre || item.nombre || 'Producto sin nombre';
 
                 return (
                   <li key={id} className="flex gap-3">

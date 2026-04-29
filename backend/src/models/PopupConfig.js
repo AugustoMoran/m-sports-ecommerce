@@ -16,6 +16,8 @@ const popupConfigSchema = new mongoose.Schema(
     },
     imagen: { type: String, default: '' },
     imagenPublicId: { type: String, default: '' },
+    video: { type: String, default: '' },
+    videoPublicId: { type: String, default: '' },
     tiempoAparicion: { type: Number, default: 5 }, // segundos
   },
   { timestamps: true }

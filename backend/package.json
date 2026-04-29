@@ -1,7 +1,7 @@
 {
-  "name": "ecommerce-backend",
+  "name": "m-sports-backend",
   "version": "1.0.0",
-  "description": "E-commerce backend API",
+  "description": "M Sports - Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

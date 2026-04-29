@@ -101,4 +101,18 @@ const deleteOrder = async (req, res, next) => {
   }
 };
 
-module.exports = { createOrder, getMyOrders, getOrderByCode, getAllOrders, updateOrder, dispatchOrder, finalizeOrder, deleteOrder };
+// Admin: Update product stock (after order finalized with negative stock)
+const updateProductStock = async (req, res, next) => {
+  try {
+    const { productId, newStock } = req.body;
+    if (newStock === undefined) {
+      return res.status(400).json({ message: 'newStock es requerido.' });
+    }
+    const result = await orderService.updateProductStock(productId, newStock);
+    res.json({ message: 'Stock actualizado.', result });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createOrder, getMyOrders, getOrderByCode, getAllOrders, updateOrder, dispatchOrder, finalizeOrder, deleteOrder, updateProductStock };

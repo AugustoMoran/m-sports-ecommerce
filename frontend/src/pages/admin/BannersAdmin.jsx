@@ -8,7 +8,7 @@ import {
 } from '../../services/bannersApi';
 import { useUploadImageMutation } from '../../services/cartApi';
 import toast from 'react-hot-toast';
-import { HiOutlinePlus, HiOutlineTrash, HiOutlinePencil, HiX, HiOutlinePhotograph } from 'react-icons/hi';
+import { HiOutlinePlus, HiOutlineTrash, HiOutlinePencil, HiX, HiOutlinePhotograph, HiOutlineFilm } from 'react-icons/hi';
 
 const GRADIENTS = [
   { label: 'Azul', value: 'from-blue-900/70 to-transparent' },
@@ -24,6 +24,8 @@ const EMPTY = {
   subtitulo: '',
   imagen: '',
   imagenPublicId: '',
+  video: '',
+  videoPublicId: '',
   ctaTexto: 'Ver productos',
   ctaLink: '/productos',
   gradient: 'from-blue-900/70 to-transparent',
@@ -42,6 +44,8 @@ const BannersAdmin = () => {
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [newVideoFile, setNewVideoFile] = useState(null);
+  const [newVideoPreview, setNewVideoPreview] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,12 +72,15 @@ const BannersAdmin = () => {
       subtitulo: b.subtitulo || '',
       imagen: b.imagen,
       imagenPublicId: b.imagenPublicId || '',
+      video: b.video || '',
+      videoPublicId: b.videoPublicId || '',
       ctaTexto: b.ctaTexto,
       ctaLink: b.ctaLink,
       gradient: b.gradient,
       activo: b.activo,
       orden: b.orden,
     });
+    setNewVideoPreview('');
     setEditing(b._id);
     setShowForm(true);
   };
@@ -114,12 +121,36 @@ const BannersAdmin = () => {
     }
   };
 
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const { url, publicId } = await uploadImage(fd).unwrap();
+      setForm((f) => ({ ...f, video: url, videoPublicId: publicId }));
+      setNewVideoPreview(URL.createObjectURL(file));
+      toast.success('Video subido');
+    } catch {
+      toast.error('Error al subir video');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemoveVideo = () => {
+    setForm((f) => ({ ...f, video: '', videoPublicId: '' }));
+    setNewVideoPreview('');
+    setNewVideoFile(null);
+  };
+
   return (
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Banners / Carrusel</h1>
         <button
-          onClick={() => { setShowForm(true); setEditing(null); setForm(EMPTY); }}
+          onClick={() => { setShowForm(true); setEditing(null); setForm(EMPTY); setNewVideoPreview(''); setNewVideoFile(null); }}
           className="btn-primary flex items-center gap-2"
         >
           <HiOutlinePlus size={16} /> Nuevo banner
@@ -172,6 +203,38 @@ const BannersAdmin = () => {
                 type="url"
                 value={form.imagen}
                 onChange={(e) => setForm({ ...form, imagen: e.target.value })}
+                placeholder="https://..."
+                className="input-field mt-1"
+              />
+            </div>
+
+            {/* Video (opcional) */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium mb-1">Video (opcional)</label>
+              <div className="flex items-center gap-3">
+                <label className="btn-secondary flex items-center gap-2 cursor-pointer">
+                  <HiOutlineFilm size={16} />
+                  {uploading ? 'Subiendo...' : 'Subir video'}
+                  <input type="file" accept="video/*" onChange={handleVideoUpload} className="hidden" />
+                </label>
+                {form.video && (
+                  <div className="relative">
+                    <video src={form.video} className="h-14 w-24 object-cover rounded" />
+                    <button
+                      type="button"
+                      onClick={handleRemoveVideo}
+                      className="absolute top-0 right-0 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transform translate-x-1 -translate-y-1"
+                    >
+                      <HiX size={12} />
+                    </button>
+                  </div>
+                )}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">O pegá una URL directamente:</p>
+              <input
+                type="url"
+                value={form.video}
+                onChange={(e) => setForm({ ...form, video: e.target.value })}
                 placeholder="https://..."
                 className="input-field mt-1"
               />

@@ -37,16 +37,15 @@ const useCart = () => {
       try {
         const result = await addToCartApi({ productoId: producto._id, cantidad }).unwrap();
         if (result?.items) dispatch(setItems(result.items));
-        toast.success('Agregado al carrito');
+        toast.success('Agregado al carrito', { duration: 1500 });
       } catch (err) {
         toast.error(err?.data?.message || 'Error al agregar al carrito');
         return;
       }
     } else {
       dispatch(addItem({ producto, cantidad }));
-      toast.success('Agregado al carrito');
+      toast.success('Agregado al carrito', { duration: 1500 });
     }
-    dispatch(toggleCart());
   };
 
   const handleRemove = async (productoId) => {

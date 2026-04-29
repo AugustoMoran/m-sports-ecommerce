@@ -38,28 +38,23 @@ const mercadopagoWebhook = async (req, res, next) => {
       const order = await Order.findById(externalRef);
       if (!order) return res.sendStatus(200);
 
-      const wasAlreadyApproved = order.estadoPago === 'aprobado';
-
       order.estadoPago = estadoPago;
       order.mpPaymentId = paymentId;
-      if (estadoPago === 'aprobado') order.metodoPago = 'mercadopago';
-      await order.save();
-
-      if (estadoPago === 'aprobado' && !wasAlreadyApproved && !order.stockDeducido) {
-        // Deduct real stock only when payment is confirmed
-        for (const item of order.items) {
-          await Product.findByIdAndUpdate(item.producto, {
-            $inc: { stock: -item.cantidad, vendidos: item.cantidad },
-          });
+      if (estadoPago === 'aprobado') {
+        order.metodoPago = 'mercadopago';
+        // When payment approved, ensure envio is 'pendiente' for admin to dispatch
+        if (!order.estadoEnvio || order.estadoEnvio === 'pendiente') {
+          order.estadoEnvio = 'pendiente';
         }
-        order.stockDeducido = true;
-        await order.save();
-
         // Clear the user's cart in DB
         if (order.usuario) {
           await Cart.findOneAndUpdate({ usuario: order.usuario }, { items: [] });
         }
       }
+      await order.save();
+
+      // IMPORTANT: Stock is deducted ONLY when admin finalizes the order via finalizeOrder endpoint,
+      // NOT when payment is approved. This allows admin control over the dispatch process.
     }
 
     res.sendStatus(200);

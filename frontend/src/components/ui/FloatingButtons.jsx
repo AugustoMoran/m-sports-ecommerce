@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaWhatsapp, FaInstagram } from 'react-icons/fa';
+import ChatWidget from './ChatWidget';
 
 const FloatingButtons = () => {
   const waNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '5491100000000';
@@ -29,6 +30,9 @@ const FloatingButtons = () => {
       >
         <FaWhatsapp size={24} color="white" />
       </a>
+
+      {/* AI Chat */}
+      <ChatWidget />
     </div>
   );
 };

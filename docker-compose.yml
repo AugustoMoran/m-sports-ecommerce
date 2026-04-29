@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  # Backend Node.js
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb+srv://msportsbsports_db_user:nzrmfOlFqUWb3cVI@cluster0.zdr9e3q.mongodb.net/?appName=Cluster0
+      - JWT_SECRET=jwt-secret-ecommerce-2024-xK9mP3nQ
+      - REFRESH_TOKEN_SECRET=refresh-secret-ecommerce-2024-zL7wR5vY
+      - FRONTEND_URL=http://localhost:5173
+      - NODE_ENV=production
+      - CLOUDINARY_CLOUD_NAME=dzqu8pib2
+      - CLOUDINARY_API_KEY=681394175381926
+      - CLOUDINARY_API_SECRET=1WvTzELe3v8alT7d_aBCV5x4rhE
+      - CLOUDINARY_STORAGE_LIMIT_MB=25000
+      - MP_ACCESS_TOKEN=APP_USR-4783972108448843-042516-1a905e025b8f6871468257ba70550cfb-3310776735
+      - MP_PUBLIC_KEY=APP_USR-041f2bf0-6fe6-4759-9d59-3eed14db48d7
+      - MP_WEBHOOK_SECRET=ee037eada6187a1730c72930e24664020fb7425768c77f3137e7c546af46017e
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=m.sports.b.sports@gmail.com
+      - SMTP_PASS=${SMTP_PASS}
+      - WHATSAPP_NUMBER=541130837054
+      - ADMIN_EMAIL=m.sports.b.sports@gmail.com
+    depends_on:
+      - mongodb
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Frontend Vite
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:5000/api
+      - VITE_WHATSAPP_NUMBER=541130837054
+      - VITE_ADMIN_EMAIL=m.sports.b.sports@gmail.com
+      - VITE_INSTAGRAM_URL=https://www.instagram.com/m.sports_sin_limites?igsh=amYxdTU5aG42MHhj
+      - VITE_TIKTOK_URL=https://www.tiktok.com/@sin_limite_136
+      - VITE_STORE_NAME=M Sports - Sin Limites
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # MongoDB (opcional - si quieres correr local)
+  # mongodb:
+  #   image: mongo:7.0
+  #   ports:
+  #     - "27017:27017"
+  #   environment:
+  #     - MONGO_INITDB_ROOT_USERNAME=msportsbsports_db_user
+  #     - MONGO_INITDB_ROOT_PASSWORD=nzrmfOlFqUWb3cVI
+  #     - MONGO_INITDB_DATABASE=ecommerce
+  #   volumes:
+  #     - mongo_data:/data/db
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo_data:

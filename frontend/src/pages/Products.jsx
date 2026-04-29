@@ -13,14 +13,16 @@ const SORT_OPTIONS = [
 ];
 
 const Products = () => {
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);
   const [allProducts, setAllProducts] = useState([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  // Solo permitir valores válidos para filtros
   const categoria = searchParams.get('categoria') || '';
   const search = searchParams.get('search') || '';
-  const sort = searchParams.get('sort') || 'newest';
+  const sort = ['newest','popular','price-asc','price-desc'].includes(searchParams.get('sort')) ? searchParams.get('sort') : 'newest';
 
   const { data, isFetching } = useGetProductsQuery(
     { page, limit: 12, categoria, search, sort },
@@ -31,26 +33,38 @@ const Products = () => {
 
   const { data: categories = [] } = useGetCategoriesQuery();
 
-  // Accumulate products for infinite scroll
-  React.useEffect(() => {
-    if (data?.products) {
-      if (page === 1) {
-        setAllProducts(data.products);
-      } else {
-        setAllProducts((prev) => {
-          const ids = new Set(prev.map((p) => p._id));
-          const newOnes = data.products.filter((p) => !ids.has(p._id));
-          return [...prev, ...newOnes];
-        });
-      }
-    }
-  }, [data, page]);
 
-  // Reset on filter change
+  // Referencia para filtros previos
+  const filtersRef = React.useRef({ categoria, search, sort });
+
+  // Resetear productos y página al cambiar filtros
   React.useEffect(() => {
     setPage(1);
     setAllProducts([]);
+    filtersRef.current = { categoria, search, sort };
   }, [categoria, search, sort]);
+
+  // Acumular productos solo si los filtros no cambiaron
+  React.useEffect(() => {
+    if (!data?.products) return;
+    const filtrosActuales = { categoria, search, sort };
+    const filtrosPrevios = filtersRef.current;
+    if (
+      filtrosPrevios.categoria !== categoria ||
+      filtrosPrevios.search !== search ||
+      filtrosPrevios.sort !== sort ||
+      page === 1
+    ) {
+      setAllProducts(data.products);
+      filtersRef.current = filtrosActuales;
+    } else {
+      setAllProducts((prev) => {
+        const ids = new Set(prev.map((p) => p._id));
+        const newOnes = data.products.filter((p) => !ids.has(p._id));
+        return [...prev, ...newOnes];
+      });
+    }
+  }, [data, page]);
 
   const hasMore = data ? page < data.pages : false;
 
@@ -60,10 +74,16 @@ const Products = () => {
 
   const sentinelRef = useInfiniteScroll({ onVisible: loadMore, hasMore, loading: isFetching });
 
+  // Solo permitir valores válidos y limpiar filtros
   const updateFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
-    if (value) params.set(key, value);
+    if (key === 'sort' && !['newest','popular','price-asc','price-desc'].includes(value)) return;
+    if (key === 'categoria' && value === '') params.delete('categoria');
+    else if (value) params.set(key, value);
     else params.delete(key);
+    // Al cambiar filtro, resetear paginado
+    setPage(1);
+    setAllProducts([]);
     setSearchParams(params);
   };
 
