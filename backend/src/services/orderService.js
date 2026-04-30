@@ -121,8 +121,11 @@ const createOrder = async ({ userId, guestData, items, cuponCodigo, metodoPago }
     }
   }
   
+  // Populate usuario before sending admin notification
+  const populatedOrder = await Order.findById(order._id).populate('usuario');
+  
   // Always notify admin (for both MP and WhatsApp)
-  sendOrderNotificationToAdmin(order)
+  sendOrderNotificationToAdmin(populatedOrder)
     .then(() => console.log(`✅ Notificación admin enviada para orden ${order.codigo}`))
     .catch(err => console.error(`❌ Error en notificación admin:`, err.message));
 
