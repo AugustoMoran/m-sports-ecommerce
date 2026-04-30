@@ -68,7 +68,9 @@ const mercadopagoWebhook = async (req, res, next) => {
         }
 
         if (emailRecipient) {
-          sendOrderConfirmationToUser(emailRecipient, order).catch(console.error);
+          sendOrderConfirmationToUser(emailRecipient, order)
+            .then(() => console.log(`✅ Email MP enviado a ${emailRecipient}`))
+            .catch(err => console.error(`❌ Error enviando email MP a ${emailRecipient}:`, err.message));
         }
       }
 

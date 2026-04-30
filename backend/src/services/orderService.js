@@ -115,12 +115,16 @@ const createOrder = async ({ userId, guestData, items, cuponCodigo, metodoPago }
     }
 
     if (emailRecipient) {
-      sendOrderConfirmationToUser(emailRecipient, order).catch(console.error);
+      sendOrderConfirmationToUser(emailRecipient, order)
+        .then(() => console.log(`✅ Email enviado a ${emailRecipient}`))
+        .catch(err => console.error(`❌ Error enviando email a ${emailRecipient}:`, err.message));
     }
   }
   
   // Always notify admin (for both MP and WhatsApp)
-  sendOrderNotificationToAdmin(order).catch(console.error);
+  sendOrderNotificationToAdmin(order)
+    .then(() => console.log(`✅ Notificación admin enviada para orden ${order.codigo}`))
+    .catch(err => console.error(`❌ Error en notificación admin:`, err.message));
 
   return order;
 };
