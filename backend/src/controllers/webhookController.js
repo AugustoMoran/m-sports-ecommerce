@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Cart = require('../models/Cart');
+const { sendOrderConfirmationToUser } = require('../utils/sendNotifications');
 
 const mercadopagoWebhook = async (req, res, next) => {
   try {
@@ -52,6 +53,24 @@ const mercadopagoWebhook = async (req, res, next) => {
         }
       }
       await order.save();
+
+      // Send confirmation email when payment is approved
+      if (estadoPago === 'aprobado') {
+        let emailRecipient = null;
+        if (order.usuario) {
+          // For logged-in users, fetch their email
+          const User = require('../models/User');
+          const user = await User.findById(order.usuario);
+          emailRecipient = user?.email;
+        } else {
+          // For guests, use stored email
+          emailRecipient = order.guestData?.email;
+        }
+
+        if (emailRecipient) {
+          sendOrderConfirmationToUser(emailRecipient, order).catch(console.error);
+        }
+      }
 
       // IMPORTANT: Stock is deducted ONLY when admin finalizes the order via finalizeOrder endpoint,
       // NOT when payment is approved. This allows admin control over the dispatch process.

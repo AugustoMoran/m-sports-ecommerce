@@ -99,21 +99,27 @@ const createOrder = async ({ userId, guestData, items, cuponCodigo, metodoPago }
   // WhatsApp: deducted in finalizeOrder when the admin dispatches.
 
   // Send notifications
-  // Get email from user or guest data
-  let emailRecipient = null;
-  if (userId) {
-    // For logged-in users, fetch their email from the database
-    const User = require('../models/User');
-    const user = await User.findById(userId);
-    emailRecipient = user?.email;
-  } else {
-    // For guests, use provided email
-    emailRecipient = guestData?.email;
-  }
+  // For Mercado Pago: email will be sent from the webhook when payment is approved
+  // For WhatsApp: email is sent immediately
+  if (metodoPago === 'whatsapp') {
+    // Get email from user or guest data
+    let emailRecipient = null;
+    if (userId) {
+      // For logged-in users, fetch their email from the database
+      const User = require('../models/User');
+      const user = await User.findById(userId);
+      emailRecipient = user?.email;
+    } else {
+      // For guests, use provided email
+      emailRecipient = guestData?.email;
+    }
 
-  if (emailRecipient) {
-    sendOrderConfirmationToUser(emailRecipient, order).catch(console.error);
+    if (emailRecipient) {
+      sendOrderConfirmationToUser(emailRecipient, order).catch(console.error);
+    }
   }
+  
+  // Always notify admin (for both MP and WhatsApp)
   sendOrderNotificationToAdmin(order).catch(console.error);
 
   return order;
