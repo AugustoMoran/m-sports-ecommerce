@@ -81,7 +81,7 @@ const Header = () => {
                 {menuOpen ? <HiX size={24} /> : <HiMenu size={24} />}
               </button>
               <Link to="/" className="flex items-center gap-2" onClick={() => dispatch(closeMenu())}>
-                <img src="/julio-sport-logo.png" alt="Julio Sport Logo" className="h-14 w-auto object-contain" />
+                <img src="/m-sports-logo.png" alt="M Sports Logo" className="h-14 w-auto object-contain" />
               </Link>
             </div>
 
