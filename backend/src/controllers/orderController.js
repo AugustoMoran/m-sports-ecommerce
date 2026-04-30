@@ -7,7 +7,14 @@ const createOrder = async (req, res, next) => {
     const { guestData, items, cuponCodigo, metodoPago } = req.body;
     const userId = req.user?._id || null;
 
+    console.log('📦 Creando orden:');
+    console.log('  - userId:', userId);
+    console.log('  - req.user:', req.user ? `Usuario: ${req.user.nombre}` : 'NO AUTENTICADO');
+    console.log('  - guestData:', guestData ? `Nombre: ${guestData.nombre}` : 'NO GUEST DATA');
+    console.log('  - metodoPago:', metodoPago);
+
     if (!userId && (!guestData?.nombre || !guestData?.email)) {
+      console.error('❌ Error: sin userId y sin guestData completo');
       return res.status(400).json({ message: 'Datos del comprador requeridos.' });
     }
 
