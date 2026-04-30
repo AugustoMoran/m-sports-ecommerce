@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useGetProductsQuery, useGetCategoriesQuery } from '../services/productsApi';
 import ProductCard from '../components/products/ProductCard';
@@ -13,6 +13,10 @@ const SORT_OPTIONS = [
 ];
 
 const Products = () => {
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(1);

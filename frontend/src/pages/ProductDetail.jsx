@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useGetProductQuery, useGetRelatedProductsQuery } from '../services/productsApi';
 import { useToggleFavoriteMutation, useGetMeQuery } from '../services/authApi';
@@ -24,6 +24,11 @@ const ProductDetail = () => {
   const [qty, setQty] = useState(1);
   const [selectedTalla, setSelectedTalla] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
+
+  // Scroll to top when component mounts or when product changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   const handleBuyWithMP = () => {
     const needsTalla = product.tallas?.habilitadas?.length > 0;

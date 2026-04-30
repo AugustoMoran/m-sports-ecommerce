@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { HiCheckCircle, HiXCircle, HiOutlineClipboardList } from 'react-icons/hi';
 
 const OrderConfirmation = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const [params] = useSearchParams();
   const status = params.get('status') || 'success';
   const isSuccess = status === 'success' || status === 'approved';

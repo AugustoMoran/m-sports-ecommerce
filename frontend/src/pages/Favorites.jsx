@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGetFavoritesQuery, useToggleFavoriteMutation } from '../services/authApi';
 import ProductCard from '../components/products/ProductCard';
 import { Link } from 'react-router-dom';
 
 const Favorites = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { data: favorites = [], isLoading } = useGetFavoritesQuery();
 
   if (isLoading) return (

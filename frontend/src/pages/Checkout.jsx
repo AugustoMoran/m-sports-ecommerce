@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { selectCartItems, selectCartTotal, clearGuestCart } from '../features/cart/cartSlice';
@@ -14,6 +14,9 @@ import { FaWhatsapp, FaCreditCard } from 'react-icons/fa';
 const REQUIRED_GUEST_FIELDS = ['nombre', 'apellido', 'email', 'telefono'];
 
 const Checkout = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectCurrentUser);

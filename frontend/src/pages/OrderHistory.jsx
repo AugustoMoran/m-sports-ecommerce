@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useGetMyOrdersQuery } from '../services/ordersApi';
 import { formatCurrency } from '../utils/formatCurrency';
 import { Link } from 'react-router-dom';
@@ -18,6 +18,9 @@ const PAY_LABELS = {
 };
 
 const OrderHistory = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { data, isLoading } = useGetMyOrdersQuery();
 
   if (isLoading) return (

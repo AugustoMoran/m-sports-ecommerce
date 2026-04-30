@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useGetMeQuery, useUpdateProfileMutation } from '../services/authApi';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../features/auth/authSlice';
@@ -7,6 +7,10 @@ import { selectAccessToken } from '../features/auth/authSlice';
 import toast from 'react-hot-toast';
 
 const Profile = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { data: user, isLoading } = useGetMeQuery();
   const token = useSelector(selectAccessToken);
   const dispatch = useDispatch();
