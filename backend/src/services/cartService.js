@@ -32,6 +32,10 @@ const syncCart = async (userId, items) => {
 };
 
 const addToCart = async (userId, productoId, cantidad = 1, talla, color) => {
+  // Normalizar null/undefined
+  talla = talla || null;
+  color = color || null;
+  
   const product = await Product.findOne({ _id: productoId, isActive: true });
   if (!product) throw Object.assign(new Error('Producto no encontrado.'), { statusCode: 404 });
 
@@ -74,26 +78,22 @@ const addToCart = async (userId, productoId, cantidad = 1, talla, color) => {
 };
 
 const updateCartItem = async (userId, productoId, cantidad, talla, color) => {
+  // Normalizar null/undefined
+  talla = talla || null;
+  color = color || null;
+  
   const cart = await Cart.findOne({ usuario: userId });
   if (!cart) throw Object.assign(new Error('Carrito no encontrado.'), { statusCode: 404 });
 
-  // Buscar item - siendo flexible con talla/color que pueden ser null
-  const item = cart.items.find((i) => {
-    const productIdMatch = i.producto.toString() === productoId;
-    const tallaMatch = (talla === null || talla === undefined) ? (i.talla === null || i.talla === undefined) : i.talla === talla;
-    const colorMatch = (color === null || color === undefined) ? (i.color === null || i.color === undefined) : i.color === color;
-    return productIdMatch && tallaMatch && colorMatch;
-  });
-  
+  const item = cart.items.find((i) => 
+    i.producto.toString() === productoId && i.talla === talla && i.color === color
+  );
   if (!item) throw Object.assign(new Error('Item no encontrado.'), { statusCode: 404 });
 
   if (cantidad <= 0) {
-    cart.items = cart.items.filter((i) => {
-      const productIdMatch = i.producto.toString() === productoId;
-      const tallaMatch = (talla === null || talla === undefined) ? (i.talla === null || i.talla === undefined) : i.talla === talla;
-      const colorMatch = (color === null || color === undefined) ? (i.color === null || i.color === undefined) : i.color === color;
-      return !(productIdMatch && tallaMatch && colorMatch);
-    });
+    cart.items = cart.items.filter((i) => 
+      !(i.producto.toString() === productoId && i.talla === talla && i.color === color)
+    );
   } else {
     item.cantidad = cantidad;
   }
@@ -103,15 +103,16 @@ const updateCartItem = async (userId, productoId, cantidad, talla, color) => {
 };
 
 const removeFromCart = async (userId, productoId, talla, color) => {
+  // Normalizar null/undefined
+  talla = talla || null;
+  color = color || null;
+  
   const cart = await Cart.findOne({ usuario: userId });
   if (!cart) return { items: [] };
 
-  cart.items = cart.items.filter((i) => {
-    const productIdMatch = i.producto.toString() === productoId;
-    const tallaMatch = (talla === null || talla === undefined) ? (i.talla === null || i.talla === undefined) : i.talla === talla;
-    const colorMatch = (color === null || color === undefined) ? (i.color === null || i.color === undefined) : i.color === color;
-    return !(productIdMatch && tallaMatch && colorMatch);
-  });
+  cart.items = cart.items.filter((i) => 
+    !(i.producto.toString() === productoId && i.talla === talla && i.color === color)
+  );
   
   await cart.save();
   return getCart(userId);

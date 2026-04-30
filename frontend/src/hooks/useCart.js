@@ -33,10 +33,6 @@ const useCart = () => {
   const [clearCartApi] = useClearCartMutation();
 
   const handleAddToCart = async (producto, cantidad = 1, talla, color) => {
-    if (!talla || !color) {
-      toast.error('Debes seleccionar talla y color');
-      return;
-    }
     if (user) {
       try {
         const result = await addToCartApi({ productoId: producto._id, cantidad, talla, color }).unwrap();

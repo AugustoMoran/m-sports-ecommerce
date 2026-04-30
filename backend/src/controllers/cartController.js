@@ -20,7 +20,10 @@ const syncCart = async (req, res, next) => {
 
 const addItem = async (req, res, next) => {
   try {
-    const { productoId, cantidad, talla, color } = req.body;
+    let { productoId, cantidad, talla, color } = req.body;
+    // Convertir strings vacíos a null para consistencia
+    talla = talla === '' ? null : talla;
+    color = color === '' ? null : color;
     const cart = await cartService.addToCart(req.user._id, productoId, cantidad, talla, color);
     res.json(cart);
   } catch (error) {
@@ -30,7 +33,10 @@ const addItem = async (req, res, next) => {
 
 const updateItem = async (req, res, next) => {
   try {
-    const { cantidad, talla, color } = req.body;
+    let { cantidad, talla, color } = req.body;
+    // Convertir strings vacíos a null para consistencia
+    talla = talla === '' ? null : talla;
+    color = color === '' ? null : color;
     const cart = await cartService.updateCartItem(req.user._id, req.params.productoId, cantidad, talla, color);
     res.json(cart);
   } catch (error) {
@@ -40,7 +46,10 @@ const updateItem = async (req, res, next) => {
 
 const removeItem = async (req, res, next) => {
   try {
-    const { talla, color } = req.query;
+    let { talla, color } = req.query;
+    // Convertir strings vacíos a null para consistencia
+    talla = talla === '' ? null : talla;
+    color = color === '' ? null : color;
     const cart = await cartService.removeFromCart(req.user._id, req.params.productoId, talla, color);
     res.json(cart);
   } catch (error) {
