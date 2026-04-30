@@ -22,8 +22,8 @@ const ProductDetail = () => {
   const [toggleFavorite] = useToggleFavoriteMutation();
   const [selectedImage, setSelectedImage] = useState(0);
   const [qty, setQty] = useState(1);
-  const [selectedTalla, setSelectedTalla] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedTalla, setSelectedTalla] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
 
   const handleBuyWithMP = () => {
     const needsTalla = product.tallas?.habilitadas?.length > 0;
@@ -33,7 +33,7 @@ const ProductDetail = () => {
       alert('Por favor selecciona talla y color');
       return;
     }
-    addToCart(product, qty, selectedTalla || null, selectedColor || null);
+    addToCart(product, qty, selectedTalla, selectedColor);
     navigate('/checkout');
   };
 
@@ -74,7 +74,7 @@ const ProductDetail = () => {
   }
 
   const waLink = generateWhatsAppLink(
-    [{ producto: product, cantidad: qty }],
+    [{ producto: product, cantidad: qty, talla: selectedTalla, color: selectedColor }],
     displayPrice * qty
   );
 
@@ -195,54 +195,58 @@ const ProductDetail = () => {
             )}
           </div>
 
-          {/* Tallas */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
-              Talla {product.tallas?.rango && `(${product.tallas.rango})`}
-            </label>
-            <div className="flex gap-2 flex-wrap">
-              {product.tallas?.habilitadas?.map((talla) => (
-                <button
-                  key={talla}
-                  onClick={() => setSelectedTalla(talla)}
-                  className={`px-4 py-2 border-2 rounded-lg font-medium transition-all ${
-                    selectedTalla === talla
-                      ? 'border-yellow-400 bg-yellow-400 text-gray-900'
-                      : 'border-gray-300 text-gray-600 hover:border-yellow-300'
-                  }`}
-                >
-                  {talla}
-                </button>
-              ))}
+          {/* Tallas - Solo si el producto tiene tallas */}
+          {product.tallas?.habilitadas?.length > 0 && (
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                Talla {product.tallas?.rango && `(${product.tallas.rango})`}
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                {product.tallas?.habilitadas?.map((talla) => (
+                  <button
+                    key={talla}
+                    onClick={() => setSelectedTalla(talla)}
+                    className={`px-4 py-2 border-2 rounded-lg font-medium transition-all ${
+                      selectedTalla === talla
+                        ? 'border-yellow-400 bg-yellow-400 text-gray-900'
+                        : 'border-gray-300 text-gray-600 hover:border-yellow-300'
+                    }`}
+                  >
+                    {talla}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Colores */}
-          <div className="mb-6">
-            <label className="block text-sm font-semibold text-gray-900 mb-2">
-              Color {product.colores?.length > 0 && `(${product.colores.length})`}
-            </label>
-            <div className="flex gap-3 flex-wrap">
-              {product.colores?.map((color) => (
-                <button
-                  key={color.codigo}
-                  onClick={() => setSelectedColor(color.nombre)}
-                  disabled={!color.habilitado}
-                  className={`relative w-12 h-12 rounded-lg border-2 transition-all ${
-                    selectedColor === color.nombre
-                      ? 'border-gray-900 ring-2 ring-offset-2 ring-gray-400'
-                      : 'border-gray-300 hover:border-gray-400'
-                  } ${!color.habilitado ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                  style={{ backgroundColor: color.codigo }}
-                  title={color.nombre}
-                >
-                  {selectedColor === color.nombre && (
-                    <div className="absolute inset-0 flex items-center justify-center text-white font-bold">✓</div>
-                  )}
-                </button>
-              ))}
+          {/* Colores - Solo si el producto tiene colores */}
+          {product.colores?.length > 0 && (
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-900 mb-2">
+                Color {product.colores?.length > 0 && `(${product.colores.length})`}
+              </label>
+              <div className="flex gap-3 flex-wrap">
+                {product.colores?.map((color) => (
+                  <button
+                    key={color.codigo}
+                    onClick={() => setSelectedColor(color.nombre)}
+                    disabled={!color.habilitado}
+                    className={`relative w-12 h-12 rounded-lg border-2 transition-all ${
+                      selectedColor === color.nombre
+                        ? 'border-gray-900 ring-2 ring-offset-2 ring-gray-400'
+                        : 'border-gray-300 hover:border-gray-400'
+                    } ${!color.habilitado ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    style={{ backgroundColor: color.codigo }}
+                    title={color.nombre}
+                  >
+                    {selectedColor === color.nombre && (
+                      <div className="absolute inset-0 flex items-center justify-center text-white font-bold">✓</div>
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Quantity + Add to cart */}
           {product.stock > 0 && (
@@ -271,7 +275,7 @@ const ProductDetail = () => {
                     alert('Por favor selecciona talla y color');
                     return;
                   }
-                  addToCart(product, qty, selectedTalla || null, selectedColor || null);
+                  addToCart(product, qty, selectedTalla, selectedColor);
                 }}
                 className="btn-primary w-full flex items-center justify-center gap-2 py-3"
               >
