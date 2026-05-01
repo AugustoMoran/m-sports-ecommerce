@@ -59,15 +59,19 @@ const HeroCarousel = () => {
     const esVideoValido = videoUrl && videoUrl.startsWith('http');
     const esImagenValida = imagenUrl && imagenUrl.startsWith('http');
     
+    // Convertir strings a booleans si vienen como tal
+    const mostrarTexto = b.mostrarTexto === 'false' ? false : (b.mostrarTexto !== false && b.mostrarTexto !== 'false');
+    const mostrarBoton = b.mostrarBoton === 'false' ? false : (b.mostrarBoton !== false && b.mostrarBoton !== 'false');
+    
     return {
       ...b,
       video: videoUrl,
       imagen: imagenUrl,
       esVideoValido,
       esImagenValida,
-      mostrarTexto: b.mostrarTexto !== false,
-      mostrarBoton: b.mostrarBoton !== false,
-      autoplay: b.autoplay === true,
+      mostrarTexto,
+      mostrarBoton,
+      autoplay: b.autoplay === true || b.autoplay === 'true',
     };
   }) : DEFAULT_SLIDES;
   return (
@@ -88,16 +92,17 @@ const HeroCarousel = () => {
               {slide.esVideoValido ? (
                 <video
                   src={slide.video}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  autoPlay={slide.autoplay}
+                  className="absolute inset-0 w-full h-full object-contain"
+                  autoPlay
                   loop
                   muted
+                  playsInline
                 />
               ) : slide.esImagenValida ? (
                 <img
                   src={slide.imagen}
                   alt={slide.titulo || 'Banner'}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-contain"
                   loading="lazy"
                 />
               ) : null}
