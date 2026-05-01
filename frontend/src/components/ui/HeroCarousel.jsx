@@ -85,7 +85,7 @@ const HeroCarousel = () => {
         navigation
         pagination={{ clickable: true }}
         loop={slides.length > 1}
-        className="w-full h-[480px] sm:h-[520px] lg:h-[600px]"
+        className="w-full h-[520px] sm:h-[560px] lg:h-[600px]"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
