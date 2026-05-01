@@ -18,7 +18,7 @@ const DEFAULT_SLIDES = [
     mostrarTexto: true,
     ctaTexto: 'Ver productos',
     ctaLink: '/productos',
-    mostrarBoton: true,
+    mostrarBoton: false,
     autoplay: false,
     gradient: 'from-gray-950/80 to-transparent',
   },
@@ -31,7 +31,7 @@ const DEFAULT_SLIDES = [
     mostrarTexto: true,
     ctaTexto: 'Ver ofertas',
     ctaLink: '/productos?sort=price-asc',
-    mostrarBoton: true,
+    mostrarBoton: false,
     autoplay: false,
     gradient: 'from-gray-950/80 to-transparent',
   },
@@ -44,7 +44,7 @@ const DEFAULT_SLIDES = [
     mostrarTexto: true,
     ctaTexto: 'Comprar ahora',
     ctaLink: '/productos',
-    mostrarBoton: true,
+    mostrarBoton: false,
     autoplay: false,
     gradient: 'from-gray-950/80 to-transparent',
   },
@@ -59,9 +59,11 @@ const HeroCarousel = () => {
     const esVideoValido = videoUrl && videoUrl.startsWith('http');
     const esImagenValida = imagenUrl && imagenUrl.startsWith('http');
     
-    // Convertir strings a booleans - only true if explicitly set to true
-    const mostrarTexto = b.mostrarTexto === true || b.mostrarTexto === 'true';
-    const mostrarBoton = b.mostrarBoton === true || b.mostrarBoton === 'true';
+    // Convertir a booleans - handle string, number, and boolean formats
+    // Only true if explicitly truthy: true, "true", 1, "1"
+    const isTruthy = (val) => val === true || val === 'true' || val === 1 || val === '1';
+    const mostrarTexto = isTruthy(b.mostrarTexto);
+    const mostrarBoton = isTruthy(b.mostrarBoton);
     
     return {
       ...b,

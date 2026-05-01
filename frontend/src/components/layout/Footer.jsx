@@ -6,7 +6,7 @@ import { HiMail, HiPhone } from 'react-icons/hi';
 const Footer = () => {
   const waNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '5491100000000';
   const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL || 'https://instagram.com/tutienda';
-  const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://www.tiktok.com/@sin_limite_136';
+cuando   const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://www.tiktok.com/@sin_limite_136';
   const storeName = import.meta.env.VITE_STORE_NAME || 'Mi Tienda';
 
   // DEBUG: Log env variables
