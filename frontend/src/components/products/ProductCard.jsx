@@ -40,7 +40,7 @@ const ProductCard = ({ product }) => {
           src={image}
           alt={product.nombre}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
         />
         {hasDiscount && (
           <span className="absolute top-2 left-2 badge bg-red-500 text-white font-bold text-xs px-2 py-1">

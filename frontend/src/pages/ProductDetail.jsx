@@ -104,13 +104,13 @@ const ProductDetail = () => {
               <video
                 src={media[selectedImage]?.url}
                 controls
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             ) : (
               <img
                 src={media[selectedImage]?.url}
                 alt={product.nombre}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             )}
 
