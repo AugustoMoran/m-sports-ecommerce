@@ -104,6 +104,10 @@ const ProductDetail = () => {
               <video
                 src={media[selectedImage]?.url}
                 controls
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="w-full h-full object-contain"
               />
             ) : (
