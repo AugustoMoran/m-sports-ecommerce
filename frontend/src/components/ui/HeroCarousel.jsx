@@ -59,9 +59,9 @@ const HeroCarousel = () => {
     const esVideoValido = videoUrl && videoUrl.startsWith('http');
     const esImagenValida = imagenUrl && imagenUrl.startsWith('http');
     
-    // Convertir strings a booleans si vienen como tal
-    const mostrarTexto = b.mostrarTexto === 'false' ? false : (b.mostrarTexto !== false && b.mostrarTexto !== 'false');
-    const mostrarBoton = b.mostrarBoton === 'false' ? false : (b.mostrarBoton !== false && b.mostrarBoton !== 'false');
+    // Convertir strings a booleans - only true if explicitly set to true
+    const mostrarTexto = b.mostrarTexto === true || b.mostrarTexto === 'true';
+    const mostrarBoton = b.mostrarBoton === true || b.mostrarBoton === 'true';
     
     return {
       ...b,
