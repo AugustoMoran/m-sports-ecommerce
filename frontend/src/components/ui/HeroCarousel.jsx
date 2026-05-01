@@ -52,13 +52,24 @@ const DEFAULT_SLIDES = [
 
 const HeroCarousel = () => {
   const { data: apiBanners } = useGetBannersQuery(true);
-  const slides = apiBanners && apiBanners.length > 0 ? apiBanners.map(b => ({
-    ...b,
-    mostrarTexto: b.mostrarTexto !== false,
-    mostrarBoton: b.mostrarBoton !== false,
-    autoplay: b.autoplay === true,
-    video: b.video || '',
-  })) : DEFAULT_SLIDES;
+  const slides = apiBanners && apiBanners.length > 0 ? apiBanners.map(b => {
+    // Normalizar valores
+    const videoUrl = b.video?.trim() || '';
+    const imagenUrl = b.imagen?.trim() || '';
+    const esVideoValido = videoUrl && videoUrl.startsWith('http');
+    const esImagenValida = imagenUrl && imagenUrl.startsWith('http');
+    
+    return {
+      ...b,
+      video: videoUrl,
+      imagen: imagenUrl,
+      esVideoValido,
+      esImagenValida,
+      mostrarTexto: b.mostrarTexto !== false,
+      mostrarBoton: b.mostrarBoton !== false,
+      autoplay: b.autoplay === true,
+    };
+  }) : DEFAULT_SLIDES;
   return (
     <div className="w-full">
       <Swiper
@@ -74,15 +85,15 @@ const HeroCarousel = () => {
           <SwiperSlide key={slide._id}>
             <div className="relative w-full h-full overflow-hidden">
               {/* Video o Imagen */}
-              {slide.video && slide.video.trim() ? (
+              {slide.esVideoValido ? (
                 <video
                   src={slide.video}
                   className="absolute inset-0 w-full h-full object-cover"
-                  autoPlay={slide.autoplay === true}
+                  autoPlay={slide.autoplay}
                   loop
                   muted
                 />
-              ) : slide.imagen && slide.imagen.trim() ? (
+              ) : slide.esImagenValida ? (
                 <img
                   src={slide.imagen}
                   alt={slide.titulo || 'Banner'}
@@ -96,21 +107,21 @@ const HeroCarousel = () => {
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-6 sm:px-10">
                   <div className="max-w-xl animate-slide-up">
-                    {slide.mostrarTexto !== false && (
+                    {slide.mostrarTexto && (
                       <>
-                        {slide.titulo && (
+                        {slide.titulo?.trim() && (
                           <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
                             {slide.titulo}
                           </h1>
                         )}
-                        {slide.subtitulo && (
+                        {slide.subtitulo?.trim() && (
                           <p className="text-base sm:text-xl text-white/90 mb-8 drop-shadow">
                             {slide.subtitulo}
                           </p>
                         )}
                       </>
                     )}
-                    {slide.mostrarBoton && slide.ctaTexto && slide.ctaTexto.trim() && (
+                    {slide.mostrarBoton && slide.ctaTexto?.trim() && (
                       <Link
                         to={slide.ctaLink || '/'}
                         className="inline-flex items-center gap-2 bg-primary-400 text-gray-900 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-primary-300 transition-all hover:scale-105 active:scale-95"
