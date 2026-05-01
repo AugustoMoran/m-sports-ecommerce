@@ -12,28 +12,40 @@ const DEFAULT_SLIDES = [
   {
     _id: '1',
     imagen: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1400&q=80',
+    video: '',
     titulo: 'Nueva colección',
     subtitulo: 'Descubrí los mejores productos al mejor precio',
+    mostrarTexto: true,
     ctaTexto: 'Ver productos',
     ctaLink: '/productos',
+    mostrarBoton: true,
+    autoplay: false,
     gradient: 'from-gray-950/80 to-transparent',
   },
   {
     _id: '2',
     imagen: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=80',
+    video: '',
     titulo: 'Ofertas especiales',
     subtitulo: 'Hasta 40% de descuento en productos seleccionados',
+    mostrarTexto: true,
     ctaTexto: 'Ver ofertas',
     ctaLink: '/productos?sort=price-asc',
+    mostrarBoton: true,
+    autoplay: false,
     gradient: 'from-gray-950/80 to-transparent',
   },
   {
     _id: '3',
     imagen: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=80',
+    video: '',
     titulo: 'Envíos a todo el país',
     subtitulo: 'Rápido, seguro y al mejor precio',
+    mostrarTexto: true,
     ctaTexto: 'Comprar ahora',
     ctaLink: '/productos',
+    mostrarBoton: true,
+    autoplay: false,
     gradient: 'from-gray-950/80 to-transparent',
   },
 ];
@@ -56,23 +68,22 @@ const HeroCarousel = () => {
           <SwiperSlide key={slide._id}>
             <div className="relative w-full h-full overflow-hidden">
               {/* Video o Imagen */}
-              {slide.video ? (
+              {slide.video && slide.video.trim() ? (
                 <video
                   src={slide.video}
-                  alt={slide.titulo}
                   className="absolute inset-0 w-full h-full object-cover"
-                  autoPlay={slide.autoplay}
+                  autoPlay={slide.autoplay === true}
                   loop
                   muted
                 />
-              ) : (
+              ) : slide.imagen && slide.imagen.trim() ? (
                 <img
                   src={slide.imagen}
-                  alt={slide.titulo}
+                  alt={slide.titulo || 'Banner'}
                   className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                 />
-              )}
+              ) : null}
               {/* Overlay */}
               <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
               {/* Content */}
@@ -93,9 +104,9 @@ const HeroCarousel = () => {
                         )}
                       </>
                     )}
-                    {slide.mostrarBoton !== false && slide.ctaTexto && (
+                    {slide.mostrarBoton === true && slide.ctaTexto && slide.ctaTexto.trim() && (
                       <Link
-                        to={slide.ctaLink}
+                        to={slide.ctaLink || '/'}
                         className="inline-flex items-center gap-2 bg-primary-400 text-gray-900 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-primary-300 transition-all hover:scale-105 active:scale-95"
                       >
                         {slide.ctaTexto}
