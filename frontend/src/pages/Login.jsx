@@ -26,11 +26,7 @@ const Login = () => {
         cantidad: i.cantidad,
       }));
       const result = await login({ ...form, guestCart }).unwrap();
-      dispatch(setCredentials({ 
-        accessToken: result.accessToken, 
-        user: result.user,
-        refreshToken: result.refreshToken, // 📱 Para fallback en móvil
-      }));
+      dispatch(setCredentials({ accessToken: result.accessToken, user: result.user }));
 
       // Sync guest cart to DB
       if (guestCart.length > 0) {

@@ -1,6 +1,6 @@
 /**
  * Initialize Mercado Pago SDK
- * This runs once when the app loads
+ * Waits for SDK to load before initializing
  */
 export const initializeMercadoPago = () => {
   const publicKey = import.meta.env.VITE_MP_PUBLIC_KEY;
@@ -10,21 +10,28 @@ export const initializeMercadoPago = () => {
     return;
   }
 
-  // Check if MP SDK is loaded
-  if (typeof window.mp === 'undefined') {
-    console.warn('⚠️ Mercado Pago SDK not loaded. Make sure it\'s included in index.html');
-    return;
-  }
-
-  console.log('🔐 Initializing Mercado Pago SDK...');
-  console.log(`   Public Key: ${publicKey.substring(0, 20)}...`);
+  // Wait for SDK to load (max 5 attempts)
+  let attempts = 0;
+  const maxAttempts = 5;
   
-  try {
-    window.mp.init({
-      publicKey: publicKey,
-    });
-    console.log('✅ Mercado Pago SDK initialized successfully');
-  } catch (error) {
-    console.error('❌ Error initializing Mercado Pago SDK:', error);
-  }
+  const initialize = () => {
+    if (typeof window.mp !== 'undefined') {
+      console.log('✅ Mercado Pago SDK initialized');
+      try {
+        window.mp.init({
+          publicKey: publicKey,
+        });
+      } catch (error) {
+        console.error('❌ Error initializing MP SDK:', error);
+      }
+    } else if (attempts < maxAttempts) {
+      attempts++;
+      console.log(`⏳ Waiting for MP SDK to load... (${attempts}/${maxAttempts})`);
+      setTimeout(initialize, 500);
+    } else {
+      console.warn('⚠️ Mercado Pago SDK did not load after 2.5s. Check index.html');
+    }
+  };
+
+  initialize();
 };

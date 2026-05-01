@@ -3,21 +3,22 @@ const User = require('../models/User');
 
 /**
  * Middleware: verify access token from cookie (HTTP-only) or Authorization header.
+ * Cookies are PRIMARY (secure). Header is FALLBACK for mobile only.
  * Attaches req.user on success.
  */
 const protect = async (req, res, next) => {
   try {
     let token = req.cookies.accessToken;
     
-    // Fallback: intenta obtener del header Authorization (para móvil cuando cookies fallan)
+    // Fallback: SOLO si no hay cookie, intenta header (para móvil)
     if (!token) {
       const authHeader = req.headers.authorization;
       if (authHeader?.startsWith('Bearer ')) {
         token = authHeader.slice(7);
-        console.log('🔑 Token obtenido del header Authorization');
+        console.log('🔐 Token obtenido del header Authorization (fallback móvil)');
       }
     } else {
-      console.log('🔑 Token obtenido de cookie HTTP-only');
+      console.log('🔐 Token obtenido de cookie HTTP-only (seguro)');
     }
     
     if (!token) {

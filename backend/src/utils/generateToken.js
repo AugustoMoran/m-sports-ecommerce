@@ -18,9 +18,9 @@ const generateRefreshToken = async (userId) => {
 
 const setRefreshTokenCookie = (res, token) => {
   res.cookie('refreshToken', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'lax',
+    httpOnly: true, // ✅ Seguro contra XSS
+    secure: process.env.NODE_ENV === 'production', // ✅ HTTPS only en production
+    sameSite: 'Lax', // 📱 Funciona mejor en móvil que 'None'
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     path: '/',
   });
@@ -28,9 +28,9 @@ const setRefreshTokenCookie = (res, token) => {
 
 const setAccessTokenCookie = (res, token) => {
   res.cookie('accessToken', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'lax',
+    httpOnly: true, // ✅ Seguro contra XSS
+    secure: process.env.NODE_ENV === 'production', // ✅ HTTPS only en production
+    sameSite: 'Lax', // 📱 Funciona mejor en móvil que 'None'
     maxAge: 15 * 60 * 1000, // 15 minutes
     path: '/',
   });

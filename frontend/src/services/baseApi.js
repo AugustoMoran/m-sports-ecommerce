@@ -24,29 +24,17 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   if (result.error?.status === 401) {
     // Try to refresh on any 401 (expired token, missing token, etc.)
-    const state = api.getState();
-    const refreshToken = state.auth.refreshToken; // 📱 Token de localStorage si cookies fallan
-    
-    const refreshHeaders = {};
-    if (refreshToken) {
-      refreshHeaders['X-Refresh-Token'] = refreshToken;
-    }
-    
     const refreshResult = await baseQuery(
-      { 
-        url: '/auth/refresh', 
-        method: 'POST',
-        headers: refreshHeaders,
-      },
+      { url: '/auth/refresh', method: 'POST' },
       api,
       extraOptions
     );
 
     if (refreshResult.data?.accessToken) {
+      const state = api.getState();
       api.dispatch(
         setCredentials({
           accessToken: refreshResult.data.accessToken,
-          refreshToken: refreshResult.data.refreshToken || refreshToken, // Usar nuevo o mantener el anterior
           user: state.auth.user,
         })
       );

@@ -17,11 +17,7 @@ const Register = () => {
     e.preventDefault();
     try {
       const result = await register(form).unwrap();
-      dispatch(setCredentials({ 
-        accessToken: result.accessToken, 
-        user: result.user,
-        refreshToken: result.refreshToken, // 📱 Para fallback en móvil
-      }));
+      dispatch(setCredentials({ accessToken: result.accessToken, user: result.user }));
       toast.success('¡Cuenta creada correctamente!');
       navigate('/');
     } catch (err) {
