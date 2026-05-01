@@ -55,31 +55,52 @@ const HeroCarousel = () => {
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
             <div className="relative w-full h-full overflow-hidden">
-              {/* Image */}
-              <img
-                src={slide.imagen}
-                alt={slide.titulo}
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-              />
+              {/* Video o Imagen */}
+              {slide.video ? (
+                <video
+                  src={slide.video}
+                  alt={slide.titulo}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay={slide.autoplay}
+                  loop
+                  muted
+                />
+              ) : (
+                <img
+                  src={slide.imagen}
+                  alt={slide.titulo}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                />
+              )}
               {/* Overlay */}
               <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
               {/* Content */}
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-6 sm:px-10">
                   <div className="max-w-xl animate-slide-up">
-                    <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
-                      {slide.titulo}
-                    </h1>
-                    <p className="text-base sm:text-xl text-white/90 mb-8 drop-shadow">
-                      {slide.subtitulo}
-                    </p>
-                    <Link
-                      to={slide.ctaLink}
-                      className="inline-flex items-center gap-2 bg-primary-400 text-gray-900 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-primary-300 transition-all hover:scale-105 active:scale-95"
-                    >
-                      {slide.ctaTexto}
-                    </Link>
+                    {slide.mostrarTexto !== false && (
+                      <>
+                        {slide.titulo && (
+                          <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
+                            {slide.titulo}
+                          </h1>
+                        )}
+                        {slide.subtitulo && (
+                          <p className="text-base sm:text-xl text-white/90 mb-8 drop-shadow">
+                            {slide.subtitulo}
+                          </p>
+                        )}
+                      </>
+                    )}
+                    {slide.mostrarBoton !== false && slide.ctaTexto && (
+                      <Link
+                        to={slide.ctaLink}
+                        className="inline-flex items-center gap-2 bg-primary-400 text-gray-900 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-primary-300 transition-all hover:scale-105 active:scale-95"
+                      >
+                        {slide.ctaTexto}
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

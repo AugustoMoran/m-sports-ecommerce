@@ -26,8 +26,11 @@ const EMPTY = {
   imagenPublicId: '',
   video: '',
   videoPublicId: '',
+  mostrarTexto: true,
   ctaTexto: 'Ver productos',
   ctaLink: '/productos',
+  mostrarBoton: true,
+  autoplay: false,
   gradient: 'from-blue-900/70 to-transparent',
   activo: true,
   orden: 0,
@@ -68,14 +71,17 @@ const BannersAdmin = () => {
 
   const handleEdit = (b) => {
     setForm({
-      titulo: b.titulo,
+      titulo: b.titulo || '',
       subtitulo: b.subtitulo || '',
       imagen: b.imagen,
       imagenPublicId: b.imagenPublicId || '',
       video: b.video || '',
       videoPublicId: b.videoPublicId || '',
+      mostrarTexto: b.mostrarTexto !== false,
       ctaTexto: b.ctaTexto,
       ctaLink: b.ctaLink,
+      mostrarBoton: b.mostrarBoton !== false,
+      autoplay: b.autoplay || false,
       gradient: b.gradient,
       activo: b.activo,
       orden: b.orden,
@@ -165,25 +171,45 @@ const BannersAdmin = () => {
             <button onClick={() => setShowForm(false)}><HiX size={18} /></button>
           </div>
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">Título *</label>
+            {/* Toggle: Mostrar campos de texto */}
+            <div className="md:col-span-2 flex items-center gap-2 bg-gray-50 p-3 rounded">
               <input
-                type="text"
-                value={form.titulo}
-                onChange={(e) => setForm({ ...form, titulo: e.target.value })}
-                className="input-field"
-                required
+                type="checkbox"
+                id="mostrarTexto"
+                checked={form.mostrarTexto}
+                onChange={(e) => setForm({ ...form, mostrarTexto: e.target.checked })}
+                className="w-4 h-4"
               />
+              <label htmlFor="mostrarTexto" className="text-sm font-medium cursor-pointer">
+                Mostrar título, subtítulo y botón
+              </label>
             </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">Subtítulo</label>
-              <input
-                type="text"
-                value={form.subtitulo}
-                onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
-                className="input-field"
-              />
-            </div>
+
+            {/* Campos de texto (condicionales) */}
+            {form.mostrarTexto && (
+              <>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Título</label>
+                  <input
+                    type="text"
+                    value={form.titulo}
+                    onChange={(e) => setForm({ ...form, titulo: e.target.value })}
+                    className="input-field"
+                    placeholder="Ej: Nueva colección"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-1">Subtítulo</label>
+                  <input
+                    type="text"
+                    value={form.subtitulo}
+                    onChange={(e) => setForm({ ...form, subtitulo: e.target.value })}
+                    className="input-field"
+                    placeholder="Ej: Descubrí los mejores productos"
+                  />
+                </div>
+              </>
+            )}
 
             {/* Imagen */}
             <div className="md:col-span-2">
@@ -238,6 +264,18 @@ const BannersAdmin = () => {
                 placeholder="https://..."
                 className="input-field mt-1"
               />
+              {form.video && (
+                <div className="flex items-center gap-2 mt-2">
+                  <input
+                    type="checkbox"
+                    id="autoplay"
+                    checked={form.autoplay}
+                    onChange={(e) => setForm({ ...form, autoplay: e.target.checked })}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor="autoplay" className="text-sm">Autoplay</label>
+                </div>
+              )}
             </div>
 
             <div>
@@ -247,6 +285,7 @@ const BannersAdmin = () => {
                 value={form.ctaTexto}
                 onChange={(e) => setForm({ ...form, ctaTexto: e.target.value })}
                 className="input-field"
+                disabled={!form.mostrarBoton}
               />
             </div>
             <div>
@@ -257,6 +296,7 @@ const BannersAdmin = () => {
                 onChange={(e) => setForm({ ...form, ctaLink: e.target.value })}
                 className="input-field"
                 placeholder="/productos"
+                disabled={!form.mostrarBoton}
               />
             </div>
 
