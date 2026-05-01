@@ -3,6 +3,54 @@ const router = express.Router();
 const { getBanners, createBanner, updateBanner, deleteBanner } = require('../controllers/bannerController');
 const { protect, adminOnly } = require('../middleware/auth');
 
+// Test endpoint - crear preferencia de prueba
+router.post('/test/mp-preference', async (req, res, next) => {
+  try {
+    const MercadoPagoConfig = require('mercadopago').default;
+    const { Preference } = require('mercadopago');
+    
+    const accessToken = process.env.MP_ACCESS_TOKEN;
+    if (!accessToken) {
+      return res.status(400).json({ error: 'MP_ACCESS_TOKEN not configured' });
+    }
+
+    const client = new MercadoPagoConfig({ accessToken });
+    const preference = new Preference(client);
+
+    const body = {
+      items: [
+        {
+          id: '1',
+          title: 'Test Product',
+          quantity: 1,
+          unit_price: 100,
+          currency_id: 'ARS',
+        }
+      ],
+      external_reference: 'TEST-' + Date.now(),
+      back_urls: {
+        success: 'http://localhost:3000/success',
+        failure: 'http://localhost:3000/failure',
+        pending: 'http://localhost:3000/pending',
+      },
+    };
+
+    const result = await preference.create({ body });
+    res.json({
+      success: true,
+      preferenceId: result.id,
+      initPoint: result.init_point,
+      sandboxInitPoint: result.sandbox_init_point,
+    });
+  } catch (err) {
+    res.status(400).json({
+      error: err.message,
+      status: err.status,
+      code: err.code,
+    });
+  }
+});
+
 // Test endpoint - ver datos crudos de banners
 router.get('/test/debug', async (req, res, next) => {
   try {
