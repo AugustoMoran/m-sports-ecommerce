@@ -5,7 +5,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import store from './app/store';
 import App from './App';
+import { initializeMercadoPago } from './config/mercadopago';
 import './index.css';
+
+// Initialize Mercado Pago SDK
+initializeMercadoPago();
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
