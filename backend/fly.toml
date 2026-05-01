@@ -3,6 +3,7 @@ primary_region = "gru"
 
 [build]
   dockerfile = "Dockerfile"
+  build-args = { CACHEBUST = "FORCE_REBUILD_20260501_030300" }
 
 [env]
   NODE_ENV = "production"
