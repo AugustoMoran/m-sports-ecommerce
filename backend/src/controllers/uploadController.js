@@ -31,101 +31,48 @@ const getUpload = () => {
   return upload;
 };
 
-const crypto = require('crypto');
-
-// Function to upload buffer to Cloudinary using API
+// Function to upload buffer to Cloudinary using SDK
 const uploadToCloudinary = async (fileBuffer, filename, mimetype) => {
-  console.log(`\n📤 Uploading ${filename} to Cloudinary via HTTP API...`);
-  
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
-  
-  if (!cloudName || !apiKey || !apiSecret) {
-    throw new Error('Cloudinary credentials not configured');
-  }
-
-  const isVideo = mimetype.startsWith('video/');
-  const resourceType = isVideo ? 'video' : 'image';
-  
-  // Create form data using built-in FormData (Node.js 18+)
-  const formData = new FormData();
-  
-  // Convert buffer to blob
-  const blob = new Blob([fileBuffer], { type: mimetype });
-  formData.append('file', blob, filename);
-  
-  // Add authentication - timestamp for signing
-  const timestamp = Math.floor(Date.now() / 1000);
-  
-  // Create params object with all fields that will be signed
-  // IMPORTANT: This must match EXACTLY what Cloudinary expects in the signature
-  const params = {
-    folder: 'ecommerce',
-    public_id: filename.split('.')[0],
-    timestamp: timestamp.toString(),
-  };
-  
-  // Generate signature: SHA1(key=value&key=value&...+api_secret)
-  // IMPORTANT: Must be in alphabetical order and NOT include api_key
-  const paramsArray = Object.entries(params)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}=${value}`);
-  
-  const stringToSign = paramsArray.join('&') + apiSecret;
-  console.log(`   String to sign: '${paramsArray.join('&')}'`);
-  console.log(`   With secret appended: '${stringToSign}'`);
-  
-  const signature = crypto.createHash('sha1').update(stringToSign).digest('hex');
-  console.log(`   Generated signature: ${signature}`);
-  
-  // Add all parameters to form data (order doesn't matter for FormData)
-  formData.append('folder', params.folder);
-  formData.append('public_id', params.public_id);
-  formData.append('timestamp', params.timestamp);
-  formData.append('signature', signature);
-  formData.append('api_key', apiKey);
+  console.log(`\n📤 Uploading ${filename} to Cloudinary via SDK...`);
   
   try {
-    const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
-    console.log(`📡 POST ${uploadUrl}`);
-    console.log(`   Cloud Name: ${cloudName}`);
-    console.log(`   Resource Type: ${resourceType}`);
-    console.log(`   File: ${filename} (${fileBuffer.length} bytes)`);
-    console.log(`   Params for signature: folder=ecommerce, public_id=${params.public_id}, timestamp=${params.timestamp}`);
-    console.log(`   Signature: ${signature}`);
-    
-    const response = await fetch(uploadUrl, {
-      method: 'POST',
-      body: formData,
+    // Create a stream from buffer for Cloudinary SDK
+    const stream = require('stream');
+    const readable = new stream.Readable();
+    readable.push(fileBuffer);
+    readable.push(null);
+
+    return new Promise((resolve, reject) => {
+      const isVideo = mimetype.startsWith('video/');
+      const resourceType = isVideo ? 'video' : 'image';
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: resourceType,
+          folder: 'ecommerce',
+          public_id: filename.split('.')[0],
+          overwrite: true,
+          format: isVideo ? undefined : 'auto',
+        },
+        (error, result) => {
+          if (error) {
+            console.log(`🔴 Cloudinary upload error:`, error.message);
+            reject(error);
+          } else {
+            console.log(`✅ Upload successful!`);
+            console.log(`   Public ID: ${result.public_id}`);
+            console.log(`   URL: ${result.secure_url}`);
+            resolve({
+              url: result.secure_url,
+              publicId: result.public_id,
+              width: result.width,
+              height: result.height,
+            });
+          }
+        }
+      );
+
+      readable.pipe(uploadStream);
     });
-
-    console.log(`   Response Status: ${response.status}`);
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log(`🔴 Upload failed. Status: ${response.status}`);
-      console.log(`   Response: ${errorText}`);
-      throw new Error(`Cloudinary upload failed: ${response.status} - ${errorText}`);
-    }
-
-    const result = await response.json();
-    
-    if (result.error) {
-      console.log(`🔴 Cloudinary error:`, result.error);
-      throw new Error(`Cloudinary error: ${result.error.message}`);
-    }
-
-    console.log(`✅ Upload successful!`);
-    console.log(`   Public ID: ${result.public_id}`);
-    console.log(`   URL: ${result.secure_url}`);
-    
-    return {
-      url: result.secure_url,
-      publicId: result.public_id,
-      width: result.width,
-      height: result.height,
-    };
   } catch (err) {
     console.log(`🔴 Error uploading to Cloudinary:`, err.message);
     throw err;
