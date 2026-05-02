@@ -99,7 +99,7 @@ const ProductDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
         {/* Media Carousel */}
         <div>
-          <div className="rounded-2xl overflow-hidden bg-gray-100 mb-3 relative group">
+          <div className="rounded-2xl overflow-hidden bg-white mb-3 relative group">
             {media[selectedImage]?.type === 'video' ? (
               <video
                 src={media[selectedImage]?.url}

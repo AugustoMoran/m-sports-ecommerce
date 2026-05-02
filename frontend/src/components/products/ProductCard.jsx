@@ -35,7 +35,7 @@ const ProductCard = ({ product }) => {
   return (
     <Link to={`/productos/${product._id}`} className="card group cursor-pointer animate-fade-in">
       {/* Image */}
-      <div className="relative overflow-hidden aspect-square bg-gray-100">
+      <div className="relative overflow-hidden aspect-square bg-white">
         <img
           src={image}
           alt={product.nombre}
