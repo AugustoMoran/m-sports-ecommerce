@@ -288,6 +288,13 @@ const Header = () => {
             >
               Todos los productos
             </Link>
+            <Link
+              to="/productos?sort=popular"
+              onClick={() => dispatch(closeMenu())}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-300 font-medium transition-colors text-gray-900"
+            >
+              ⭐ Más vendidos
+            </Link>
 
             {categories.length > 0 && (
               <div className="pt-2">
