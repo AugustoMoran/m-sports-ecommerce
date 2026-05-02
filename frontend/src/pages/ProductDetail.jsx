@@ -154,7 +154,7 @@ const ProductDetail = () => {
                   {item.type === 'video' ? (
                     <>
                       <video src={item.url} className="w-full h-full object-cover" />
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                      <div className="absolute inset-0 flex items-center justify-center">
                         <HiOutlineFilm size={20} className="text-white" />
                       </div>
                     </>
