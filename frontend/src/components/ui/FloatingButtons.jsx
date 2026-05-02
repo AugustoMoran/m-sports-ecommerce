@@ -5,7 +5,7 @@ import ChatWidget from './ChatWidget';
 const FloatingButtons = () => {
   const waNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '5491100000000';
   const instagramUrl = import.meta.env.VITE_INSTAGRAM_URL || 'https://instagram.com/tutienda';
-  const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://tiktok.com/@msports_ecommerce';
+  const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://www.tiktok.com/@sin_limite_136';
 
   return (
     <div className="fixed bottom-6 right-4 z-50 flex flex-col gap-3">
