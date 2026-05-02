@@ -26,7 +26,7 @@ const Footer = () => {
   return (
     <footer className="bg-[#0D0D0D] text-gray-300 mt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
@@ -74,6 +74,23 @@ const Footer = () => {
               <li><Link to="/productos?sort=popular" className="hover:text-white transition-colors">Más vendidos</Link></li>
               <li><Link to="/mis-ordenes" className="hover:text-white transition-colors">Mis pedidos</Link></li>
               <li><Link to="/favoritos" className="hover:text-white transition-colors">Favoritos</Link></li>
+            </ul>
+          </div>
+
+          {/* Sucursales */}
+          <div>
+            <h3 className="font-semibold text-white mb-4">📍 Sucursales</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="hover:text-white transition-colors">
+                <p className="font-medium text-yellow-400">Moron - Local 1</p>
+                <p className="text-gray-400">25 de mayo 136</p>
+                <p className="text-gray-400">Galería Ciudad Local 25</p>
+              </li>
+              <li className="hover:text-white transition-colors">
+                <p className="font-medium text-yellow-400">Moron - Local 2</p>
+                <p className="text-gray-400">Av Rivadavia 18252</p>
+                <p className="text-gray-400">Local 6</p>
+              </li>
             </ul>
           </div>
 
