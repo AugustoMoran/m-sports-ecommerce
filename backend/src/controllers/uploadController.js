@@ -156,7 +156,16 @@ const getStorageUsage = async (req, res, next) => {
     res.json(report);
   } catch (error) {
     console.log('🔴 Storage usage error:', error.message);
-    next(error);
+    // Return safe default values instead of throwing error
+    res.json({
+      usedMB: '0.00',
+      limitMB: 25000,
+      percentage: '0.0',
+      alert: false,
+      threshold: 80,
+      error: 'Unable to fetch from Cloudinary API',
+      available: false
+    });
   }
 };
 

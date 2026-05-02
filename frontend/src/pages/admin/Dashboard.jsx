@@ -38,8 +38,15 @@ const Dashboard = () => {
         <StatCard icon={HiOutlineShoppingBag} label="Almacenamiento" value={storage ? `${storage.percentage}%` : '—'} color={storage?.alert ? 'bg-red-500' : 'bg-orange-400'} />
       </div>
 
+      {/* Storage error notice */}
+      {storage?.available === false && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-yellow-700 text-sm">
+          ⚠️ No se pudo cargar la información de almacenamiento. Verificando conexión con Cloudinary...
+        </div>
+      )}
+
       {/* Storage warning */}
-      {storage?.alert && (
+      {storage?.alert && storage?.available !== false && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-red-700 text-sm">
           ⚠️ El almacenamiento de imágenes está al {storage.percentage}% ({storage.usedMB} MB de {storage.limitMB} MB).
         </div>
