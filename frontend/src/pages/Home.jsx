@@ -35,6 +35,19 @@ const Home = () => {
       <HeroCarousel />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Featured products */}
+        <section className="py-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Más vendidos</h2>
+            <Link to="/productos?sort=popular" className="text-gray-900 hover:text-gray-600 text-sm font-semibold flex items-center gap-1">
+              Ver todo <HiArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {(featuredData?.products || []).map((p) => <ProductCard key={p._id} product={p} />)}
+          </div>
+        </section>
+
         {/* Categories */}
         {categories.length > 0 && (
           <section className="py-12">
@@ -49,19 +62,6 @@ const Home = () => {
             </div>
           </section>
         )}
-
-        {/* Featured products */}
-        <section className="py-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Más vendidos</h2>
-            <Link to="/productos?sort=popular" className="text-gray-900 hover:text-gray-600 text-sm font-semibold flex items-center gap-1">
-              Ver todo <HiArrowRight size={16} />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {(featuredData?.products || []).map((p) => <ProductCard key={p._id} product={p} />)}
-          </div>
-        </section>
 
         {/* Banner CTA */}
         <section className="py-8">
