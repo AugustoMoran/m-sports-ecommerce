@@ -115,7 +115,6 @@ const HeroCarousel = () => {
                 />
               ) : null}
               {/* Overlay - para widescreen images solo */}
-              <div className="absolute inset-0 bg-gradient-to-r from-gray-950/60 to-transparent opacity-40" />
               {/* Content */}
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-6 sm:px-10">
