@@ -51,6 +51,16 @@ const DEFAULT_SLIDES = [
 ];
 
 const HeroCarousel = () => {
+  const [imageAspectRatios, setImageAspectRatios] = React.useState({});
+  
+  const handleImageLoad = (e, slideId) => {
+    const img = e.target;
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    // 16:9 = 1.777... Consideramos 16:9 si está entre 1.7 y 1.85
+    const is16x9 = aspectRatio >= 1.7 && aspectRatio <= 1.85;
+    setImageAspectRatios(prev => ({ ...prev, [slideId]: is16x9 }));
+  };
+
   const { data: apiBanners } = useGetBannersQuery(true);
   const slides = apiBanners && apiBanners.length > 0 ? apiBanners.map(b => {
     // Normalizar valores
@@ -104,7 +114,10 @@ const HeroCarousel = () => {
                 <img
                   src={slide.imagen}
                   alt={slide.titulo || 'Banner'}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  onLoad={(e) => handleImageLoad(e, slide._id)}
+                  className={`absolute inset-0 w-full h-full ${
+                    imageAspectRatios[slide._id] ? 'object-cover' : 'object-contain'
+                  }`}
                   loading="lazy"
                 />
               ) : null}
