@@ -52,6 +52,21 @@ const DEFAULT_SLIDES = [
 
 const HeroCarousel = () => {
   const [imageAspectRatios, setImageAspectRatios] = React.useState({});
+  const [isMobile, setIsMobile] = React.useState(false);
+  
+  // Detectar si es mobile y adaptar en tiempo real
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check on mount
+    handleResize();
+    
+    // Listen for changes
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   const handleImageLoad = (e, slideId) => {
     const img = e.target;
@@ -97,7 +112,7 @@ const HeroCarousel = () => {
         navigation
         pagination={{ clickable: true }}
         loop={slides.length > 1}
-        className="w-full h-[520px] sm:h-[560px] lg:h-[600px]"
+        className="w-full h-screen sm:h-[580px] md:h-[640px] lg:h-[680px]"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
@@ -113,7 +128,9 @@ const HeroCarousel = () => {
                     setImageAspectRatios(prev => ({ ...prev, [slide._id]: isNotWidescreen }));
                   }}
                   className={`absolute inset-0 w-full h-full ${
-                    imageAspectRatios[slide._id] ? 'object-contain' : 'object-cover'
+                    // Mobile: siempre object-cover para llenar pantalla completa
+                    // Desktop: inteligente según aspect ratio
+                    isMobile ? 'object-cover' : (imageAspectRatios[slide._id] ? 'object-contain' : 'object-cover')
                   }`}
                   autoPlay
                   loop
@@ -126,13 +143,15 @@ const HeroCarousel = () => {
                   alt={slide.titulo || 'Banner'}
                   onLoad={(e) => handleImageLoad(e, slide._id)}
                   className={`absolute inset-0 w-full h-full ${
-                    imageAspectRatios[slide._id] ? 'object-contain' : 'object-cover'
+                    // Mobile: siempre object-cover para llenar pantalla completa
+                    // Desktop: inteligente según aspect ratio
+                    isMobile ? 'object-cover' : (imageAspectRatios[slide._id] ? 'object-contain' : 'object-cover')
                   }`}
                   loading="lazy"
                 />
               ) : null}
-              {/* Overlay - Solo si es widescreen (object-cover) */}
-              {!imageAspectRatios[slide._id] && (
+              {/* Overlay - Solo si es widescreen (object-cover) y no en mobile */}
+              {!isMobile && !imageAspectRatios[slide._id] && (
                 <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
               )}
               {/* Content */}
