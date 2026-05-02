@@ -52,24 +52,47 @@ const getStorageUsage = async () => {
   // Re-ensure config is correct before API call
   console.log('\n📊 Fetching storage usage...');
   const config = cloudinary.config();
-  console.log(`   Using cloud_name: ${config.cloud_name}`);
+  console.log(`   Cloud name: ${config.cloud_name}`);
+  console.log(`   API Key: ${config.api_key ? '✓ SET' : '✗ NOT SET'}`);
+  console.log(`   API Secret: ${config.api_secret ? '✓ SET (length: ' + config.api_secret.length + ')' : '✗ NOT SET'}`);
   
   try {
+    // First try the main API call
+    console.log('   Calling cloudinary.api.usage()...');
     const result = await cloudinary.api.usage();
+    
+    console.log('   Raw result:', JSON.stringify(result, null, 2));
+    
     const usedMB = result.storage.usage / (1024 * 1024);
     // credits.limit is in GB (1 credit = 1 GB on Cloudinary plans)
     const limitMB = result.credits?.limit
       ? Math.round(result.credits.limit * 1024)
       : parseInt(process.env.CLOUDINARY_STORAGE_LIMIT_MB || '25000', 10);
     const percentage = result.credits?.used_percent ?? (usedMB / limitMB) * 100;
-    console.log('✅ Storage usage retrieved successfully\n');
+    console.log('✅ Storage usage retrieved successfully');
+    console.log(`   Used: ${usedMB.toFixed(2)} MB / Limit: ${limitMB} MB`);
+    console.log(`   Percentage: ${percentage}%\n`);
     return { usedMB: usedMB.toFixed(2), limitMB, percentage: parseFloat(percentage).toFixed(1) };
   } catch (err) {
-    console.log('🔴 Error getting storage usage:', err.message);
-    console.log('Status:', err.status);
-    console.log('Http Code:', err.http_code);
-    // Return default safe values instead of throwing - this prevents 500 errors
-    console.log('⚠️ Returning default storage values');
+    console.log('🔴 Error getting storage usage:');
+    console.log('   Message:', err.message);
+    console.log('   Status:', err.status);
+    console.log('   Http Code:', err.http_code);
+    console.log('   Full Error:', JSON.stringify(err, Object.getOwnPropertyNames(err), 2));
+    
+    // Try to get at least basic account info to verify credentials work
+    try {
+      console.log('\n   Attempting fallback: cloudinary.api.resources() to verify auth...');
+      const resources = await cloudinary.api.resources({ max_results: 1 });
+      console.log('   ✓ Auth verified! Account is accessible');
+      console.log('   But usage() endpoint failed - this may require account upgrade');
+    } catch (fallbackErr) {
+      console.log('   ✗ Auth failed - credentials may be invalid');
+      console.log('   Error:', fallbackErr.message);
+    }
+    
+    // Return default safe values instead of throwing
+    console.log('\n⚠️ Returning default storage values\n');
     return { 
       usedMB: '0.00', 
       limitMB: 25000, 
