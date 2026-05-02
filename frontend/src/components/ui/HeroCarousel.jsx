@@ -91,6 +91,7 @@ const HeroCarousel = () => {
       <Swiper
         modules={[Autoplay, Navigation, Pagination, EffectFade]}
         effect="fade"
+        fadeEffect={{ crossFade: true }}
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         navigation
         pagination={{ clickable: true }}
@@ -99,12 +100,20 @@ const HeroCarousel = () => {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
-            <div className="relative w-full h-full overflow-hidden">
+            <div className="relative w-full h-full overflow-hidden bg-gray-400">
               {/* Video o Imagen */}
               {slide.esVideoValido ? (
                 <video
                   src={slide.video}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  onLoadedMetadata={(e) => {
+                    const video = e.target;
+                    const aspectRatio = video.videoWidth / video.videoHeight;
+                    const is16x9 = aspectRatio >= 1.7 && aspectRatio <= 1.85;
+                    setImageAspectRatios(prev => ({ ...prev, [slide._id]: is16x9 }));
+                  }}
+                  className={`absolute inset-0 w-full h-full ${
+                    imageAspectRatios[slide._id] ? 'object-cover' : 'object-contain'
+                  }`}
                   autoPlay
                   loop
                   muted
