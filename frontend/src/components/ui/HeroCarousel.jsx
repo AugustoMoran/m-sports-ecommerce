@@ -100,7 +100,7 @@ const HeroCarousel = () => {
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
-            <div className="relative w-full h-full overflow-hidden bg-gray-400">
+            <div className="relative w-full h-full overflow-hidden bg-white">
               {/* Video o Imagen */}
               {slide.esVideoValido ? (
                 <video
@@ -130,8 +130,10 @@ const HeroCarousel = () => {
                   loading="lazy"
                 />
               ) : null}
-              {/* Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
+              {/* Overlay - Solo si es 16:9 (object-cover) */}
+              {imageAspectRatios[slide._id] && (
+                <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
+              )}
               {/* Content */}
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-6 sm:px-10">
