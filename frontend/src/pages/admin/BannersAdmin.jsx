@@ -42,6 +42,7 @@ const EMPTY = {
 };
 
 const BannersAdmin = () => {
+  // Rebuild trigger - v2
   const { data: banners = [], isLoading } = useGetBannersQuery(false);
   const [createBanner] = useCreateBannerMutation();
   const [updateBanner] = useUpdateBannerMutation();
