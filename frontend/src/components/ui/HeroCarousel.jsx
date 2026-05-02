@@ -51,30 +51,9 @@ const DEFAULT_SLIDES = [
 ];
 
 const HeroCarousel = () => {
-  const [imageAspectRatios, setImageAspectRatios] = React.useState({});
-  const [isMobile, setIsMobile] = React.useState(false);
-  
-  // Detectar si es mobile y adaptar en tiempo real
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    // Check on mount
-    handleResize();
-    
-    // Listen for changes
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
   const handleImageLoad = (e, slideId) => {
-    const img = e.target;
-    const aspectRatio = img.naturalWidth / img.naturalHeight;
-    // 16:9 = 1.777... Consideramos que es DIFERENTE a 16:9 si está fuera de 1.5 a 2.0
-    // Por defecto creemos que es 16:9 (object-cover)
-    const isNotWidescreen = aspectRatio < 1.5 || aspectRatio > 2.0;
-    setImageAspectRatios(prev => ({ ...prev, [slideId]: isNotWidescreen }));
+    // Ya no necesitamos calcular aspect ratio
+    // aspect-video + object-contain maneja todo
   };
 
   const { data: apiBanners } = useGetBannersQuery(true);
@@ -112,7 +91,7 @@ const HeroCarousel = () => {
         navigation
         pagination={{ clickable: true }}
         loop={slides.length > 1}
-        className="w-full h-screen sm:h-[580px] md:h-[640px] lg:h-[680px]"
+        className="w-full aspect-video"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
@@ -121,17 +100,7 @@ const HeroCarousel = () => {
               {slide.esVideoValido ? (
                 <video
                   src={slide.video}
-                  onLoadedMetadata={(e) => {
-                    const video = e.target;
-                    const aspectRatio = video.videoWidth / video.videoHeight;
-                    const isNotWidescreen = aspectRatio < 1.5 || aspectRatio > 2.0;
-                    setImageAspectRatios(prev => ({ ...prev, [slide._id]: isNotWidescreen }));
-                  }}
-                  className={`absolute inset-0 w-full h-full ${
-                    // Mobile: siempre object-cover para llenar pantalla completa
-                    // Desktop: inteligente según aspect ratio
-                    isMobile ? 'object-cover' : (imageAspectRatios[slide._id] ? 'object-contain' : 'object-cover')
-                  }`}
+                  className="absolute inset-0 w-full h-full object-contain bg-white"
                   autoPlay
                   loop
                   muted
@@ -141,19 +110,12 @@ const HeroCarousel = () => {
                 <img
                   src={slide.imagen}
                   alt={slide.titulo || 'Banner'}
-                  onLoad={(e) => handleImageLoad(e, slide._id)}
-                  className={`absolute inset-0 w-full h-full ${
-                    // Mobile: siempre object-cover para llenar pantalla completa
-                    // Desktop: inteligente según aspect ratio
-                    isMobile ? 'object-cover' : (imageAspectRatios[slide._id] ? 'object-contain' : 'object-cover')
-                  }`}
+                  className="absolute inset-0 w-full h-full object-contain bg-white"
                   loading="lazy"
                 />
               ) : null}
-              {/* Overlay - Solo si es widescreen (object-cover) y no en mobile */}
-              {!isMobile && !imageAspectRatios[slide._id] && (
-                <div className={`absolute inset-0 bg-gradient-to-r ${slide.gradient}`} />
-              )}
+              {/* Overlay - para widescreen images solo */}
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-950/60 to-transparent opacity-40" />
               {/* Content */}
               <div className="relative z-10 h-full flex items-center">
                 <div className="max-w-7xl mx-auto px-6 sm:px-10">
