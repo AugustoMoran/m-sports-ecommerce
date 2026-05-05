@@ -19,9 +19,11 @@ export const initializeMercadoPago = async () => {
     // Check if window.MercadoPago is available (v2 API)
     if (typeof window.MercadoPago !== 'undefined') {
       console.log('✅ Mercado Pago SDK initialized successfully');
-      window.MercadoPago.init({
-        publicKey: publicKey,
+      // SDK v2 uses constructor pattern, not init method
+      window.mp = new window.MercadoPago(publicKey, {
+        locale: 'es-AR'
       });
+      console.log('✅ window.mp instance created');
     } else {
       console.error('❌ window.MercadoPago not found. SDK may not have loaded correctly.');
     }
