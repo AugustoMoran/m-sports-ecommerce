@@ -99,7 +99,7 @@ const ProductDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
         {/* Media Carousel */}
         <div>
-          <div className="rounded-2xl overflow-hidden bg-white mb-3 relative group">
+          <div className="rounded-2xl overflow-hidden bg-white mb-3 relative group aspect-square">
             {media[selectedImage]?.type === 'video' ? (
               <video
                 src={media[selectedImage]?.url}
@@ -108,13 +108,13 @@ const ProductDetail = () => {
                 loop
                 muted
                 playsInline
-                className="w-full h-auto object-contain"
+                className="w-full h-full object-contain"
               />
             ) : (
               <img
                 src={media[selectedImage]?.url}
                 alt={product.nombre}
-                className="w-full h-auto object-contain"
+                className="w-full h-full object-contain"
               />
             )}
 
