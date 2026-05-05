@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const Cart = require('../models/Cart');
-const { sendOrderConfirmationToUser } = require('../utils/sendNotifications');
+const { sendOrderConfirmationToUser, sendOrderNotificationToAdmin } = require('../utils/sendNotifications');
 
 const mercadopagoWebhook = async (req, res, next) => {
   try {
@@ -184,6 +184,12 @@ const mercadopagoWebhook = async (req, res, next) => {
       } else {
         console.error(`❌ Sin emailRecipient para orden ${order.codigo}`);
       }
+
+      // 📧 ENVIAR EMAIL AL ADMIN CON PAGO APROBADO
+      const populatedOrder = await Order.findById(order._id).populate('usuario');
+      sendOrderNotificationToAdmin(populatedOrder)
+        .then(() => console.log(`✅ Notificación admin enviada con pago APROBADO para orden ${order.codigo}`))
+        .catch(err => console.error(`❌ Error en notificación admin:`, err.message));
 
       // IMPORTANTE: Stock se descuenta SOLO cuando admin finaliza la orden,
       // NO cuando se aprueba el pago. Esto permite control administrativo.

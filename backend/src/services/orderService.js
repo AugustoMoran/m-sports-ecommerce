@@ -100,7 +100,7 @@ const createOrder = async ({ userId, guestData, items, cuponCodigo, metodoPago }
 
   // Send notifications
   // For Mercado Pago: email will be sent from the webhook when payment is approved
-  // For WhatsApp: email is sent immediately
+  // For WhatsApp: NO notifications are sent from here
   if (metodoPago === 'whatsapp') {
     // Get email from user or guest data
     let emailRecipient = null;
@@ -120,14 +120,6 @@ const createOrder = async ({ userId, guestData, items, cuponCodigo, metodoPago }
         .catch(err => console.error(`❌ Error enviando email a ${emailRecipient}:`, err.message));
     }
   }
-  
-  // Populate usuario before sending admin notification
-  const populatedOrder = await Order.findById(order._id).populate('usuario');
-  
-  // Always notify admin (for both MP and WhatsApp)
-  sendOrderNotificationToAdmin(populatedOrder)
-    .then(() => console.log(`✅ Notificación admin enviada para orden ${order.codigo}`))
-    .catch(err => console.error(`❌ Error en notificación admin:`, err.message));
 
   return order;
 };
