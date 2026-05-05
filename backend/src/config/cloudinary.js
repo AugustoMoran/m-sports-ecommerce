@@ -72,7 +72,7 @@ const getStorageUsage = async () => {
     console.log('✅ Storage usage retrieved successfully');
     console.log(`   Used: ${usedMB.toFixed(2)} MB / Limit: ${limitMB} MB`);
     console.log(`   Percentage: ${percentage}%\n`);
-    return { usedMB: usedMB.toFixed(2), limitMB, percentage: parseFloat(percentage).toFixed(1) };
+    return { usedMB: usedMB.toFixed(2), limitMB, percentage: parseFloat(percentage).toFixed(1), available: true };
   } catch (err) {
     console.log('🔴 Error getting storage usage:');
     console.log('   Message:', err.message);

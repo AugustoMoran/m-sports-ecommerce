@@ -35,18 +35,11 @@ const Dashboard = () => {
         <StatCard icon={HiOutlineClipboardList} label="Pedidos" value={ordersData?.total ?? '—'} color="bg-blue-500" />
         <StatCard icon={HiOutlineCurrencyDollar} label="Ingresos aprobados" value={formatCurrency(totalRevenue)} color="bg-green-500" />
         <StatCard icon={HiOutlineCube} label="Productos" value={productsData?.total ?? '—'} color="bg-purple-500" />
-        <StatCard icon={HiOutlineShoppingBag} label="Almacenamiento" value={storage ? `${storage.percentage}%` : '—'} color={storage?.alert ? 'bg-red-500' : 'bg-orange-400'} />
+        <StatCard icon={HiOutlineShoppingBag} label="Almacenamiento" value={storage?.available !== false ? `${storage?.percentage ?? '—'}%` : '—'} color={storage?.alert ? 'bg-red-500' : 'bg-orange-400'} />
       </div>
 
-      {/* Storage error notice */}
-      {storage?.available === false && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-yellow-700 text-sm">
-          ⚠️ No se pudo cargar la información de almacenamiento. Verificando conexión con Cloudinary...
-        </div>
-      )}
-
-      {/* Storage warning */}
-      {storage?.alert && storage?.available !== false && (
+      {/* Storage warning - only show if data is available and alert is true */}
+      {storage?.available === true && storage?.alert && (
         <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-red-700 text-sm">
           ⚠️ El almacenamiento de imágenes está al {storage.percentage}% ({storage.usedMB} MB de {storage.limitMB} MB).
         </div>
