@@ -21,8 +21,8 @@ const productSchema = new mongoose.Schema(
   {
     nombre: { type: String, required: true, trim: true },
     descripcion: { type: String, default: '' },
-    precio: { type: Decimal128, required: true, min: 0, get: (v) => v ? parseFloat(v.toString()) : 0 },
-    precioOferta: { type: Decimal128, default: null, min: 0, get: (v) => v ? parseFloat(v.toString()) : null },
+    precio: { type: Number, required: true, min: 0 },
+    precioOferta: { type: Number, default: null, min: 0 },
     stock: { type: Number, required: true, min: 0, default: 0 },
     categoria: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
     imagenes: [mediaSchema],
