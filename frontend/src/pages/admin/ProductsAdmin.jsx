@@ -164,6 +164,17 @@ const ProductsAdmin = () => {
     });
   };
 
+  const handleRemoveExistingImage = async (publicId) => {
+    if (!editingProduct) return;
+    try {
+      await removeImage({ id: editingProduct._id, publicId }).unwrap();
+      setEditingProduct((prev) => ({ ...prev, imagenes: prev.imagenes.filter((img) => img.publicId !== publicId) }));
+      toast.success('Imagen eliminada');
+    } catch {
+      toast.error('Error al eliminar imagen');
+    }
+  };
+
   const handleRemoveExistingVideo = async (publicId) => {
     if (!editingProduct) return;
     try {
