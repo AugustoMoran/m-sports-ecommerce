@@ -34,16 +34,33 @@ app.set('trust proxy', 1);
 app.use(helmet());
 
 // CORS
+const allowedOrigins = [
+  // Dominio actual (Vercel)
+  'https://m-sports-ecommerce.vercel.app',
+  // Dominio nuevo
+  'https://m.sportssl.com',
+  'https://www.m.sportssl.com',
+  'http://m.sportssl.com',
+  'http://www.m.sportssl.com',
+];
+
+// En desarrollo, agregar localhost
+if (process.env.NODE_ENV === 'development') {
+  allowedOrigins.push('http://localhost:5173', 'http://localhost:3000');
+}
+
+// Si hay FRONTEND_URL en variables de entorno, agregarlo
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // En desarrollo, acepta localhost en cualquier puerto
-      if (process.env.NODE_ENV === 'development' && origin?.includes('localhost')) {
+      // Requests sin origin (como mobile apps, Postman, etc)
+      if (!origin) {
         callback(null, true);
-      } else if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
-        callback(null, true);
-      } else if (!origin) {
-        // Requests sin origin (como mobile apps, Postman, etc)
+      } else if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
         callback(new Error('CORS no permitido'));
