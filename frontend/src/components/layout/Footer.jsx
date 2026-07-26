@@ -30,7 +30,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <img src="/logo.png" alt="Logo" className="h-40 w-auto" />
+              <img src="/logo.png" alt="M Sports" className="h-40 w-auto" />
             </div>
             <p className="text-xl font-extrabold text-white tracking-widest mb-6 text-center md:text-left uppercase drop-shadow-lg">
               {storeName}
