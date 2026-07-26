@@ -120,7 +120,7 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/popup', popupRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/test', testRoutes);
-app.use('/api', seoRoutes);
+app.use('/', seoRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

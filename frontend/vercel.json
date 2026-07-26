@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/sitemap.xml",
-      "destination": "https://m-sports-backend.fly.dev/api/sitemap.xml"
+      "destination": "https://m-sports-backend.fly.dev/sitemap.xml"
     },
     {
       "source": "/(.*)",
