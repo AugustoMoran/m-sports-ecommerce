@@ -25,7 +25,7 @@ const Home = () => {
   return (
     <div>
       <SEO 
-        title="Tienda Online de Artículos Deportivos"
+        title="M Sports | Tienda Online de Artículos Deportivos"
         description="Encuentra la mejor selección de indumentaria y artículos deportivos en M Sports. Envíos a todo el país y las mejores marcas."
         keywords="deportes, m sports, indumentaria deportiva, zapatillas, remeras, pantalones, articulos deportivos"
         schemaData={schemaData}
