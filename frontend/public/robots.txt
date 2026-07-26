@@ -1,0 +1,21 @@
+User-agent: *
+
+# Allow access to main site
+Allow: /
+
+# Disallow private and administrative routes
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /login
+Disallow: /registro
+Disallow: /checkout
+Disallow: /perfil
+Disallow: /api
+Disallow: /mis-ordenes
+Disallow: /favoritos
+
+# Host
+Host: https://msportssl.com
+
+# Sitemap location (points to backend dynamic sitemap)
+Sitemap: https://m-sports-backend.fly.dev/api/sitemap.xml

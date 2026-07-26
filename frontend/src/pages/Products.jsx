@@ -4,6 +4,7 @@ import { useGetProductsQuery, useGetCategoriesQuery } from '../services/products
 import ProductCard from '../components/products/ProductCard';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import { HiAdjustments, HiX } from 'react-icons/hi';
+import SEO from '../components/common/SEO';
 
 const SORT_OPTIONS = [
   { value: 'newest', label: 'Más recientes' },
@@ -78,6 +79,39 @@ const Products = () => {
 
   const sentinelRef = useInfiniteScroll({ onVisible: loadMore, hasMore, loading: isFetching });
 
+  const currentCategory = categories.find(c => c._id === categoria);
+  const pageTitle = search 
+    ? `Búsqueda: ${search}` 
+    : (currentCategory ? currentCategory.nombre : 'Todos los productos');
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "M Sports",
+        "item": "https://msportssl.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Productos",
+        "item": "https://msportssl.com/productos"
+      }
+    ]
+  };
+
+  if (currentCategory) {
+    breadcrumbSchema.itemListElement.push({
+      "@type": "ListItem",
+      "position": 3,
+      "name": currentCategory.nombre,
+      "item": `https://msportssl.com/productos?categoria=${currentCategory._id}`
+    });
+  }
+
   // Solo permitir valores válidos y limpiar filtros
   const updateFilter = (key, value) => {
     const params = new URLSearchParams(searchParams);
@@ -93,6 +127,11 @@ const Products = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <SEO 
+        title={pageTitle}
+        description={`Explora nuestra colección de ${pageTitle.toLowerCase()} en M Sports. Calidad y rendimiento en cada artículo.`}
+        schemaData={breadcrumbSchema}
+      />
       {/* Page header */}
       <div className="flex items-center justify-between mb-6">
         <div>

@@ -105,13 +105,14 @@ const HeroCarousel = () => {
                   loop
                   muted
                   playsInline
+                  preload="auto"
                 />
               ) : slide.esImagenValida ? (
                 <img
                   src={slide.imagen}
                   alt={slide.titulo || 'Banner'}
                   className="absolute inset-0 w-full h-full object-contain bg-white"
-                  loading="lazy"
+                  fetchpriority="high"
                 />
               ) : null}
               {/* Overlay - para widescreen images solo */}

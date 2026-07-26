@@ -57,6 +57,7 @@ const ProductCard = ({ product }) => {
           <button
             onClick={handleAddToCart}
             disabled={product.stock === 0}
+            aria-label="Agregar al carrito"
             className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1 shadow-lg"
           >
             <HiOutlineShoppingCart size={14} />
@@ -66,6 +67,7 @@ const ProductCard = ({ product }) => {
         {/* Favorite */}
         <button
           onClick={handleFavorite}
+          aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
           className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center transition-all hover:scale-110"
         >
           {isFavorite ? (

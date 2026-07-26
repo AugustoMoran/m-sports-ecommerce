@@ -10,6 +10,7 @@ import ProductCard from '../components/products/ProductCard';
 import { HiOutlineHeart, HiHeart, HiOutlineShoppingCart, HiChevronLeft, HiOutlineFilm, HiChevronRight } from 'react-icons/hi';
 import { FaWhatsapp, FaCreditCard } from 'react-icons/fa';
 import { generateWhatsAppLink } from '../utils/generateWhatsAppLink';
+import SEO from '../components/common/SEO';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -83,8 +84,66 @@ const ProductDetail = () => {
     displayPrice * qty
   );
 
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.nombre,
+    "image": product.imagenes?.map(img => img.url) || [],
+    "description": product.descripcion,
+    "sku": product.sku || product._id,
+    "brand": {
+      "@type": "Brand",
+      "name": product.marca || "M Sports"
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": window.location.href,
+      "priceCurrency": "ARS",
+      "price": displayPrice,
+      "availability": product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "M Sports",
+        "item": "https://msportssl.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Productos",
+        "item": "https://msportssl.com/productos"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.categoria?.nombre || "Categoría",
+        "item": `https://msportssl.com/productos?categoria=${product.categoria?._id || ''}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "name": product.nombre,
+        "item": window.location.href
+      }
+    ]
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <SEO 
+        title={product.nombre}
+        description={product.descripcion?.substring(0, 160)}
+        image={product.imagenes?.[0]?.url}
+        type="product"
+        schemaData={[productSchema, breadcrumbSchema]}
+      />
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
         <Link to="/productos" className="flex items-center gap-1 hover:text-primary-600">

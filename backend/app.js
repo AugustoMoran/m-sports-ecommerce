@@ -24,6 +24,7 @@ const bannerRoutes = require('./src/routes/banners');
 const popupRoutes = require('./src/routes/popup');
 const chatRoutes = require('./src/routes/chat');
 const testRoutes = require('./src/routes/test');
+const seoRoutes = require('./src/routes/seo');
 
 const app = express();
 
@@ -31,17 +32,28 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Security headers
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, // Deshabilitar si rompe Mercado Pago, ajustar luego
+}));
+
+// Custom SEO/Security headers
+app.use((req, res, next) => {
+  // Evitar que el panel admin sea indexado por error si llega a la API
+  if (req.path.startsWith('/api/admin')) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+  }
+  next();
+});
 
 // CORS
 const allowedOrigins = [
   // Dominio actual (Vercel)
   'https://m-sports-ecommerce.vercel.app',
   // Dominio nuevo
-  'https://m.sportssl.com',
-  'https://www.m.sportssl.com',
-  'http://m.sportssl.com',
-  'http://www.m.sportssl.com',
+  'https://msportssl.com',
+  'https://www.msportssl.com',
+  'http://msportssl.com',
+  'http://www.msportssl.com',
 ];
 
 // En desarrollo, agregar localhost
@@ -108,6 +120,7 @@ app.use('/api/banners', bannerRoutes);
 app.use('/api/popup', popupRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/test', testRoutes);
+app.use('/api', seoRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
