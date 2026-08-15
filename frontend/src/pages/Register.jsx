@@ -26,38 +26,36 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-gray-50">
+    <div className="min-h-[calc(100vh-72px)] flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
-        <div className="card p-8">
+        <div className="card p-8 sm:p-10">
           <div className="text-center mb-8">
-            <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-xl">T</span>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Crear cuenta</h1>
+            <img src="/m-sports-logo.png" alt="M Sports" className="h-14 w-auto mx-auto mb-5 object-contain" />
+            <h1 className="font-display text-2xl font-bold text-ink">Crear cuenta</h1>
             <p className="text-gray-500 text-sm mt-1">Completá tus datos</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Nombre</label>
                 <input type="text" name="nombre" value={form.nombre} onChange={handleChange} className="input-field" required />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Apellido</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Apellido</label>
                 <input type="text" name="apellido" value={form.apellido} onChange={handleChange} className="input-field" required />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
               <input type="email" name="email" value={form.email} onChange={handleChange} className="input-field" required autoComplete="email" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Contraseña</label>
               <input type="password" name="password" value={form.password} onChange={handleChange} className="input-field" placeholder="Mínimo 6 caracteres" required autoComplete="new-password" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono (opcional)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Teléfono (opcional)</label>
               <input type="tel" name="telefono" value={form.telefono} onChange={handleChange} className="input-field" />
             </div>
 
@@ -68,7 +66,7 @@ const Register = () => {
 
           <p className="text-center text-sm text-gray-500 mt-6">
             ¿Ya tenés cuenta?{' '}
-            <Link to="/login" className="text-primary-600 hover:underline font-medium">Iniciá sesión</Link>
+            <Link to="/login" className="text-ink font-semibold hover:underline">Iniciá sesión</Link>
           </p>
         </div>
       </div>

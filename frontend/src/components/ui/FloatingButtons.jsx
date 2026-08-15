@@ -8,13 +8,13 @@ const FloatingButtons = () => {
   const tiktokUrl = import.meta.env.VITE_TIKTOK_URL || 'https://www.tiktok.com/@sin_limite_136';
 
   return (
-    <div className="fixed bottom-6 right-4 z-50 flex flex-col gap-3">
+    <div className="fixed bottom-6 right-4 z-50 flex flex-col gap-2.5">
       {/* Instagram */}
       <a
         href={instagramUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
+        className="w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
         style={{ background: 'linear-gradient(135deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d)' }}
         aria-label="Instagram"
       >
@@ -26,7 +26,7 @@ const FloatingButtons = () => {
         href={`https://wa.me/${waNumber}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-12 h-12 bg-green-500 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95 hover:bg-green-400"
+        className="w-11 h-11 bg-green-500 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95 hover:bg-green-400"
         aria-label="WhatsApp"
       >
         <FaWhatsapp size={24} color="white" />
@@ -37,7 +37,7 @@ const FloatingButtons = () => {
         href={tiktokUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="w-12 h-12 bg-black rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95 hover:bg-gray-800"
+        className="w-11 h-11 bg-black rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95 hover:bg-gray-800"
         aria-label="TikTok"
       >
         <FaTiktok size={22} color="white" />

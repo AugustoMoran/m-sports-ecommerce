@@ -33,11 +33,11 @@ const AdminLayout = ({ children }) => {
   if (!isAdmin) return <Navigate to="/" replace />;
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)]">
-      {/* Sidebar */}
-      <aside className="w-56 bg-gray-900 text-gray-100 flex-shrink-0 hidden md:flex flex-col">
-        <div className="px-5 py-4 border-b border-gray-800">
-          <p className="font-bold text-white">Panel Admin</p>
+    <div className="flex min-h-screen">
+      <aside className="w-56 bg-ink text-gray-100 flex-shrink-0 hidden md:flex flex-col">
+        <div className="px-5 py-5 border-b border-white/10">
+          <p className="font-display font-bold text-white">Panel Admin</p>
+          <p className="text-[11px] text-primary-400 mt-0.5 tracking-wide">M Sports</p>
         </div>
         <nav className="flex-1 py-4 space-y-1 px-3">
           {NAV_ITEMS.map(({ to, label, icon: Icon, exact }) => {
@@ -56,7 +56,7 @@ const AdminLayout = ({ children }) => {
             );
           })}
         </nav>
-        <div className="px-3 py-4 border-t border-gray-800">
+        <div className="px-3 py-4 border-t border-white/10">
           <Link to="/" className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors">
             <HiOutlineHome size={18} />
             Ir a la tienda

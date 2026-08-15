@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <AdminLayout>
-      <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+      <h1 className="font-display text-2xl font-bold mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
         <StatCard icon={HiOutlineClipboardList} label="Pedidos" value={ordersData?.total ?? '—'} color="bg-blue-500" />

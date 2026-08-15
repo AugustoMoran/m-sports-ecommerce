@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination, EffectFade } from 'swiper/modules';
 import { Link } from 'react-router-dom';
@@ -51,25 +51,16 @@ const DEFAULT_SLIDES = [
 ];
 
 const HeroCarousel = () => {
-  const handleImageLoad = (e, slideId) => {
-    // Ya no necesitamos calcular aspect ratio
-    // aspect-video + object-contain maneja todo
-  };
-
   const { data: apiBanners } = useGetBannersQuery(true);
   const slides = apiBanners && apiBanners.length > 0 ? apiBanners.map(b => {
-    // Normalizar valores
     const videoUrl = b.video?.trim() || '';
     const imagenUrl = b.imagen?.trim() || '';
     const esVideoValido = videoUrl && videoUrl.startsWith('http');
     const esImagenValida = imagenUrl && imagenUrl.startsWith('http');
-    
-    // Convertir a booleans - handle string, number, and boolean formats
-    // Only true if explicitly truthy: true, "true", 1, "1"
     const isTruthy = (val) => val === true || val === 'true' || val === 1 || val === '1';
     const mostrarTexto = isTruthy(b.mostrarTexto);
     const mostrarBoton = isTruthy(b.mostrarBoton);
-    
+
     return {
       ...b,
       video: videoUrl,
@@ -81,8 +72,9 @@ const HeroCarousel = () => {
       autoplay: b.autoplay === true || b.autoplay === 'true',
     };
   }) : DEFAULT_SLIDES;
+
   return (
-    <div className="w-full">
+    <div className="w-full bg-ink">
       <Swiper
         modules={[Autoplay, Navigation, Pagination, EffectFade]}
         effect="fade"
@@ -91,16 +83,15 @@ const HeroCarousel = () => {
         navigation
         pagination={{ clickable: true }}
         loop={slides.length > 1}
-        className="w-full aspect-video"
+        className="w-full aspect-[16/9] sm:aspect-[21/9] max-h-[560px]"
       >
         {slides.map((slide) => (
           <SwiperSlide key={slide._id}>
-            <div className="relative w-full h-full overflow-hidden bg-white">
-              {/* Video o Imagen */}
+            <div className="relative w-full h-full overflow-hidden bg-ink">
               {slide.esVideoValido ? (
                 <video
                   src={slide.video}
-                  className="absolute inset-0 w-full h-full object-contain bg-white"
+                  className="absolute inset-0 w-full h-full object-contain"
                   autoPlay
                   loop
                   muted
@@ -111,19 +102,17 @@ const HeroCarousel = () => {
                 <img
                   src={slide.imagen}
                   alt={slide.titulo || 'Banner'}
-                  className="absolute inset-0 w-full h-full object-contain bg-white"
+                  className="absolute inset-0 w-full h-full object-contain"
                   fetchpriority="high"
                 />
               ) : null}
-              {/* Overlay - para widescreen images solo */}
-              {/* Content */}
               <div className="relative z-10 h-full flex items-center">
-                <div className="max-w-7xl mx-auto px-6 sm:px-10">
+                <div className="page-wrap">
                   <div className="max-w-xl animate-slide-up">
                     {slide.mostrarTexto && (
                       <>
                         {slide.titulo?.trim() && (
-                          <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
+                          <h1 className="font-display text-3xl sm:text-5xl font-extrabold text-white mb-4 leading-tight drop-shadow-lg">
                             {slide.titulo}
                           </h1>
                         )}
@@ -137,7 +126,7 @@ const HeroCarousel = () => {
                     {slide.mostrarBoton && slide.ctaTexto?.trim() && (
                       <Link
                         to={slide.ctaLink || '/'}
-                        className="inline-flex items-center gap-2 bg-primary-400 text-gray-900 font-bold px-8 py-3 rounded-full shadow-lg hover:bg-primary-300 transition-all hover:scale-105 active:scale-95"
+                        className="btn-accent inline-flex items-center"
                       >
                         {slide.ctaTexto}
                       </Link>

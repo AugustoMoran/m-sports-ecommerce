@@ -33,42 +33,28 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <Link to={`/productos/${product._id}`} className="card group cursor-pointer animate-fade-in">
-      {/* Image */}
-      <div className="relative overflow-hidden aspect-square bg-white">
+    <Link to={`/productos/${product._id}`} className="group card flex flex-col h-full hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
+      <div className="relative overflow-hidden aspect-square bg-pearl">
         <img
           src={image}
           alt={product.nombre}
           loading="lazy"
-          className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-contain p-3 transition-transform duration-500 group-hover:scale-105"
         />
         {hasDiscount && (
-          <span className="absolute top-2 left-2 badge bg-red-500 text-white font-bold text-xs px-2 py-1">
+          <span className="absolute top-3 left-3 badge bg-ink text-primary-400 font-bold text-[11px] px-2.5 py-1">
             -{Math.round(((product.precio - product.precioOferta) / product.precio) * 100)}%
           </span>
         )}
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <span className="text-white font-semibold text-sm bg-black/60 px-3 py-1 rounded-full">Sin stock</span>
+          <div className="absolute inset-0 bg-ink/50 flex items-center justify-center backdrop-blur-[2px]">
+            <span className="text-white font-semibold text-sm bg-ink/80 px-3 py-1 rounded-full">Sin stock</span>
           </div>
         )}
-        {/* Hover actions */}
-        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-          <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            aria-label="Agregar al carrito"
-            className="btn-primary text-xs py-1.5 px-3 flex items-center gap-1 shadow-lg"
-          >
-            <HiOutlineShoppingCart size={14} />
-            Agregar
-          </button>
-        </div>
-        {/* Favorite */}
         <button
           onClick={handleFavorite}
-          aria-label={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
-          className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center transition-all hover:scale-110"
+          aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+          className="absolute top-3 right-3 w-9 h-9 bg-white/95 rounded-full shadow-sm flex items-center justify-center transition-all hover:scale-110"
         >
           {isFavorite ? (
             <HiHeart size={16} className="text-red-500" />
@@ -78,17 +64,26 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
 
-      {/* Info */}
-      <div className="p-3">
-        <p className="text-xs text-gray-400 mb-1 truncate">{product.categoria?.nombre}</p>
-        <h3 className="font-semibold text-sm line-clamp-2 mb-2 text-gray-800 group-hover:text-primary-600 transition-colors">
+      <div className="p-3.5 flex flex-col flex-1">
+        <p className="text-[11px] uppercase tracking-wider text-gray-400 mb-1 truncate">{product.categoria?.nombre}</p>
+        <h3 className="font-semibold text-sm line-clamp-2 mb-3 text-ink group-hover:text-gray-700 transition-colors min-h-[2.5rem]">
           {product.nombre}
         </h3>
-        <div className="flex items-baseline gap-2">
-          <span className="font-bold text-gray-900">{formatCurrency(displayPrice)}</span>
-          {hasDiscount && (
-            <span className="text-xs text-gray-400 line-through">{formatCurrency(product.precio)}</span>
-          )}
+        <div className="mt-auto flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-1.5 min-w-0">
+            <span className="font-display font-bold text-ink">{formatCurrency(displayPrice)}</span>
+            {hasDiscount && (
+              <span className="text-xs text-gray-400 line-through">{formatCurrency(product.precio)}</span>
+            )}
+          </div>
+          <button
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+            aria-label="Agregar al carrito"
+            className="w-9 h-9 rounded-full bg-ink text-white flex items-center justify-center hover:bg-primary-400 hover:text-ink transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+          >
+            <HiOutlineShoppingCart size={16} />
+          </button>
         </div>
       </div>
     </Link>

@@ -12,7 +12,7 @@ const OrderConfirmation = () => {
   const isSuccess = status === 'success' || status === 'approved';
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
+    <div className="min-h-[calc(100vh-72px)] flex items-center justify-center px-4 py-16">
       <div className="card max-w-md w-full p-10 text-center animate-fade-in">
         {isSuccess ? (
           <HiCheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
@@ -20,7 +20,7 @@ const OrderConfirmation = () => {
           <HiXCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
         )}
 
-        <h1 className="text-2xl font-bold mb-2">
+        <h1 className="font-display text-2xl font-bold mb-2">
           {isSuccess ? '¡Pedido realizado!' : 'Error en el pago'}
         </h1>
         <p className="text-gray-500 text-sm mb-8">

@@ -32,16 +32,22 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        card: '0 1px 2px rgba(15,15,15,0.04), 0 8px 24px rgba(15,15,15,0.06)',
+        'card-hover': '0 8px 28px rgba(15,15,15,0.10)',
+        nav: '0 8px 30px rgba(15,15,15,0.08)',
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',
         'slide-in': 'slideIn 0.3s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
+        'slide-up': 'slideUp 0.35s ease-out',
       },
       keyframes: {
         fadeIn: { from: { opacity: 0 }, to: { opacity: 1 } },
         slideIn: { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(0)' } },
-        slideUp: { from: { transform: 'translateY(20px)', opacity: 0 }, to: { transform: 'translateY(0)', opacity: 1 } },
+        slideUp: { from: { transform: 'translateY(16px)', opacity: 0 }, to: { transform: 'translateY(0)', opacity: 1 } },
       },
     },
   },

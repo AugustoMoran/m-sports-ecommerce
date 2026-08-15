@@ -355,7 +355,7 @@ export default function ChatWidget() {
       {/* ── Floating toggle button ─────────────────────────────────────────── */}
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95 bg-ink relative"
+        className="w-11 h-11 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110 active:scale-95 bg-ink relative"
         aria-label={open ? 'Cerrar chat' : 'Abrir asistente de compras'}
       >
         {open ? (

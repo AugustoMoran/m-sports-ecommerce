@@ -27,8 +27,8 @@ const OrderHistory = () => {
     <div className="max-w-3xl mx-auto px-4 py-12 space-y-4">
       {Array.from({ length: 3 }).map((_, i) => (
         <div key={i} className="card p-5 animate-pulse space-y-3">
-          <div className="h-4 bg-gray-200 rounded w-1/3" />
-          <div className="h-3 bg-gray-200 rounded w-1/4" />
+          <div className="h-4 bg-pearl rounded w-1/3" />
+          <div className="h-3 bg-pearl rounded w-1/4" />
         </div>
       ))}
     </div>
@@ -38,7 +38,8 @@ const OrderHistory = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
-      <h1 className="text-2xl font-bold mb-8">Mis pedidos</h1>
+      <p className="section-kicker mb-1">Cuenta</p>
+      <h1 className="section-title mb-8">Mis pedidos</h1>
 
       {orders.length === 0 ? (
         <div className="text-center text-gray-400 py-16">
@@ -55,7 +56,7 @@ const OrderHistory = () => {
               <div key={order._id} className="card p-5">
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <p className="font-mono font-bold text-primary-600">{order.codigo}</p>
+                    <p className="font-mono font-bold text-ink">{order.codigo}</p>
                     <p className="text-xs text-gray-400 mt-0.5">
                       {new Date(order.createdAt).toLocaleDateString('es-AR', { dateStyle: 'long' })}
                     </p>

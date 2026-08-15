@@ -15,10 +15,10 @@ const Favorites = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 animate-pulse">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="card">
-            <div className="aspect-square bg-gray-200" />
+            <div className="aspect-square bg-pearl" />
             <div className="p-3 space-y-2">
-              <div className="h-3 bg-gray-200 rounded" />
-              <div className="h-4 bg-gray-200 rounded w-2/3" />
+              <div className="h-3 bg-pearl rounded" />
+              <div className="h-4 bg-pearl rounded w-2/3" />
             </div>
           </div>
         ))}
@@ -27,8 +27,9 @@ const Favorites = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-2xl font-bold mb-8">Mis favoritos</h1>
+    <div className="page-wrap py-10">
+      <p className="section-kicker mb-1">Cuenta</p>
+      <h1 className="section-title mb-8">Mis favoritos</h1>
 
       {favorites.length === 0 ? (
         <div className="text-center text-gray-400 py-16">

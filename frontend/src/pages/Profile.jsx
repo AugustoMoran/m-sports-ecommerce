@@ -32,9 +32,9 @@ const Profile = () => {
 
   if (isLoading || !form) return (
     <div className="max-w-xl mx-auto px-4 py-12 animate-pulse space-y-4">
-      <div className="h-8 bg-gray-200 rounded w-1/3" />
-      <div className="h-12 bg-gray-200 rounded" />
-      <div className="h-12 bg-gray-200 rounded" />
+      <div className="h-8 bg-pearl rounded w-1/3" />
+      <div className="h-12 bg-pearl rounded" />
+      <div className="h-12 bg-pearl rounded" />
     </div>
   );
 
@@ -57,20 +57,21 @@ const Profile = () => {
 
   return (
     <div className="max-w-xl mx-auto px-4 sm:px-6 py-10">
-      <h1 className="text-2xl font-bold mb-8">Mi perfil</h1>
+      <p className="section-kicker mb-1">Cuenta</p>
+      <h1 className="section-title mb-8">Mi perfil</h1>
 
-      <div className="card p-6">
-        <div className="flex items-center gap-4 mb-6 pb-6 border-b">
-          <div className="w-14 h-14 bg-primary-100 rounded-full flex items-center justify-center">
-            <span className="text-primary-700 font-bold text-xl">
+      <div className="card p-6 sm:p-8">
+        <div className="flex items-center gap-4 mb-6 pb-6 border-b border-pearl-dark">
+          <div className="w-14 h-14 bg-primary-400 rounded-full flex items-center justify-center">
+            <span className="text-ink font-display font-bold text-xl">
               {user.nombre?.[0]?.toUpperCase()}
             </span>
           </div>
           <div>
-            <p className="font-bold">{user.nombre} {user.apellido}</p>
+            <p className="font-display font-bold">{user.nombre} {user.apellido}</p>
             <p className="text-sm text-gray-500">{user.email}</p>
             {user.role === 'admin' && (
-              <span className="badge bg-primary-100 text-primary-700 text-xs mt-1">Administrador</span>
+              <span className="badge bg-ink text-primary-400 text-xs mt-1">Administrador</span>
             )}
           </div>
         </div>

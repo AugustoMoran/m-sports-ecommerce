@@ -86,7 +86,7 @@ const WhatsAppPopup = () => {
       aria-label="Chat por WhatsApp"
     >
       {/* Card */}
-      <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gray-900">
+      <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-ink">
 
         {/* Imagen de fondo con overlay */}
         <div className="relative h-36 overflow-hidden">
@@ -98,7 +98,7 @@ const WhatsAppPopup = () => {
             onError={(e) => { e.target.src = DEFAULT_IMAGE; }}
           />
           {/* Overlay degradado */}
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-transparent" />
 
           {/* Badge premium */}
           <div className="absolute top-3 left-3 flex items-center gap-1 bg-primary-400 text-gray-900 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">

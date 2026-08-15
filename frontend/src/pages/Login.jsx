@@ -28,7 +28,6 @@ const Login = () => {
       const result = await login({ ...form, guestCart }).unwrap();
       dispatch(setCredentials({ accessToken: result.accessToken, user: result.user }));
 
-      // Sync guest cart to DB
       if (guestCart.length > 0) {
         await syncCart(guestCart).unwrap().catch(() => {});
         dispatch(clearGuestCart());
@@ -42,20 +41,18 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center px-4 py-12 bg-gray-50">
+    <div className="min-h-[calc(100vh-72px)] flex items-center justify-center px-4 py-16">
       <div className="w-full max-w-md">
-        <div className="card p-8">
+        <div className="card p-8 sm:p-10">
           <div className="text-center mb-8">
-            <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center mx-auto mb-4">
-              <span className="text-white font-bold text-xl">T</span>
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900">Iniciar sesión</h1>
+            <img src="/m-sports-logo.png" alt="M Sports" className="h-14 w-auto mx-auto mb-5 object-contain" />
+            <h1 className="font-display text-2xl font-bold text-ink">Iniciar sesión</h1>
             <p className="text-gray-500 text-sm mt-1">Accedé a tu cuenta</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
               <input
                 type="email"
                 name="email"
@@ -68,7 +65,7 @@ const Login = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Contraseña</label>
               <input
                 type="password"
                 name="password"
@@ -88,7 +85,7 @@ const Login = () => {
 
           <p className="text-center text-sm text-gray-500 mt-6">
             ¿No tenés cuenta?{' '}
-            <Link to="/registro" className="text-primary-600 hover:underline font-medium">
+            <Link to="/registro" className="text-ink font-semibold hover:underline">
               Registrate
             </Link>
           </p>

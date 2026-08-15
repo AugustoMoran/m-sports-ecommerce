@@ -44,21 +44,21 @@ const ProductDetail = () => {
   };
 
   if (isLoading) return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="page-wrap py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 animate-pulse">
-        <div className="aspect-square bg-gray-200 rounded-2xl" />
+        <div className="aspect-square bg-pearl rounded-2xl" />
         <div className="space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-3/4" />
-          <div className="h-6 bg-gray-200 rounded w-1/4" />
-          <div className="h-20 bg-gray-200 rounded" />
+          <div className="h-8 bg-pearl rounded w-3/4" />
+          <div className="h-6 bg-pearl rounded w-1/4" />
+          <div className="h-20 bg-pearl rounded" />
         </div>
       </div>
     </div>
   );
 
   if (error || !product) return (
-    <div className="max-w-7xl mx-auto px-4 py-12 text-center text-gray-500">
-      <p>Producto no encontrado.</p>
+    <div className="page-wrap py-16 text-center text-gray-500">
+      <p className="font-display text-xl text-ink mb-4">Producto no encontrado.</p>
       <Link to="/productos" className="btn-primary mt-4 inline-block">Ver productos</Link>
     </div>
   );
@@ -136,7 +136,7 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="page-wrap py-8">
       <SEO 
         title={product.nombre}
         description={product.descripcion?.substring(0, 160)}
@@ -144,21 +144,19 @@ const ProductDetail = () => {
         type="product"
         schemaData={[productSchema, breadcrumbSchema]}
       />
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-        <Link to="/productos" className="flex items-center gap-1 hover:text-primary-600">
+      <div className="flex items-center gap-2 text-sm text-gray-500 mb-8">
+        <Link to="/productos" className="flex items-center gap-1 hover:text-ink">
           <HiChevronLeft size={16} /> Productos
         </Link>
-        <span>/</span>
+        <span className="text-pearl-dark">/</span>
         <span className="text-gray-400">{product.categoria?.nombre}</span>
-        <span>/</span>
-        <span className="text-gray-900 font-medium truncate max-w-[200px]">{product.nombre}</span>
+        <span className="text-pearl-dark">/</span>
+        <span className="text-ink font-medium truncate max-w-[200px]">{product.nombre}</span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
-        {/* Media Carousel */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-14 mb-16">
         <div>
-          <div className="rounded-2xl overflow-hidden bg-white mb-3 relative group aspect-square">
+          <div className="rounded-2xl overflow-hidden bg-white border border-pearl-dark mb-3 relative group aspect-square">
             {media[selectedImage]?.type === 'video' ? (
               <video
                 src={media[selectedImage]?.url}
@@ -206,8 +204,8 @@ const ProductDetail = () => {
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  className={`relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 border-2 transition-colors ${
-                    selectedImage === i ? 'border-primary-500' : 'border-transparent'
+                  className={`relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border-2 transition-colors ${
+                    selectedImage === i ? 'border-primary-400' : 'border-pearl-dark'
                   }`}
                 >
                   {item.type === 'video' ? (
@@ -226,26 +224,25 @@ const ProductDetail = () => {
           )}
         </div>
 
-        {/* Info */}
-        <div className="flex flex-col">
+        <div className="flex flex-col md:sticky md:top-24 md:self-start">
           <div className="flex items-start justify-between gap-2 mb-1">
-            <p className="text-sm text-gray-400">{product.categoria?.nombre}</p>
+            <p className="text-xs uppercase tracking-wider text-gray-400">{product.categoria?.nombre}</p>
             <button
               onClick={() => toggleFavorite(product._id)}
-              className="p-2 rounded-xl hover:bg-gray-100 transition-colors flex-shrink-0"
+              className="p-2 rounded-full hover:bg-white border border-transparent hover:border-pearl-dark transition-colors flex-shrink-0"
             >
               {isFavorite ? <HiHeart size={22} className="text-red-500" /> : <HiOutlineHeart size={22} className="text-gray-400" />}
             </button>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">{product.nombre}</h1>
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-ink mb-4">{product.nombre}</h1>
 
           <div className="flex items-baseline gap-3 mb-4">
-            <span className="text-3xl font-extrabold text-gray-900">{formatCurrency(displayPrice)}</span>
+            <span className="font-display text-3xl font-extrabold text-ink">{formatCurrency(displayPrice)}</span>
             {hasDiscount && (
               <>
                 <span className="text-lg text-gray-400 line-through">{formatCurrency(product.precio)}</span>
-                <span className="badge bg-red-100 text-red-600 font-bold">
+                <span className="badge bg-ink text-primary-400 font-bold">
                   -{Math.round(((product.precio - product.precioOferta) / product.precio) * 100)}%
                 </span>
               </>
@@ -266,7 +263,7 @@ const ProductDetail = () => {
           {/* Tallas - Solo si el producto tiene tallas */}
           {product.tallas?.habilitadas?.length > 0 && (
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-semibold text-ink mb-2">
                 Talla {product.tallas?.rango && `(${product.tallas.rango})`}
               </label>
               <div className="flex gap-2 flex-wrap">
@@ -274,10 +271,10 @@ const ProductDetail = () => {
                   <button
                     key={talla}
                     onClick={() => setSelectedTalla(talla)}
-                    className={`px-4 py-2 border-2 rounded-lg font-medium transition-all ${
+                    className={`min-w-[3rem] px-4 py-2 border rounded-full font-medium transition-all ${
                       selectedTalla === talla
-                        ? 'border-yellow-400 bg-yellow-400 text-gray-900'
-                        : 'border-gray-300 text-gray-600 hover:border-yellow-300'
+                        ? 'border-primary-400 bg-primary-400 text-ink'
+                        : 'border-pearl-dark bg-white text-gray-600 hover:border-ink'
                     }`}
                   >
                     {talla}
@@ -290,7 +287,7 @@ const ProductDetail = () => {
           {/* Colores - Solo si el producto tiene colores */}
           {product.colores?.length > 0 && (
             <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-900 mb-2">
+              <label className="block text-sm font-semibold text-ink mb-2">
                 Color {product.colores?.length > 0 && `(${product.colores.length})`}
               </label>
               <div className="flex gap-3 flex-wrap">
@@ -299,10 +296,10 @@ const ProductDetail = () => {
                     key={color.codigo}
                     onClick={() => setSelectedColor(color.nombre)}
                     disabled={!color.habilitado}
-                    className={`relative w-12 h-12 rounded-lg border-2 transition-all ${
+                    className={`relative w-11 h-11 rounded-full border-2 transition-all ${
                       selectedColor === color.nombre
-                        ? 'border-gray-900 ring-2 ring-offset-2 ring-gray-400'
-                        : 'border-gray-300 hover:border-gray-400'
+                        ? 'border-ink ring-2 ring-offset-2 ring-primary-400'
+                        : 'border-pearl-dark hover:border-ink'
                     } ${!color.habilitado ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                     style={{ backgroundColor: color.codigo }}
                     title={color.nombre}
@@ -320,16 +317,16 @@ const ProductDetail = () => {
           {product.stock > 0 && (
             <div className="space-y-3">
               <div className="flex items-center gap-4">
-                <label className="text-sm font-semibold text-gray-900">Cantidad:</label>
-                <div className="flex items-center border border-gray-300 rounded-xl overflow-hidden">
+                <label className="text-sm font-semibold text-ink">Cantidad:</label>
+                <div className="flex items-center border border-pearl-dark bg-white rounded-full overflow-hidden">
                   <button
                     onClick={() => setQty((q) => Math.max(1, q - 1))}
-                    className="px-3 py-2 hover:bg-gray-50 text-lg"
+                    className="px-3.5 py-2 hover:bg-pearl text-lg"
                   >-</button>
                   <span className="px-4 py-2 font-medium">{qty}</span>
                   <button
                     onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-                    className="px-3 py-2 hover:bg-gray-50 text-lg"
+                    className="px-3.5 py-2 hover:bg-pearl text-lg"
                   >+</button>
                 </div>
               </div>
@@ -354,7 +351,7 @@ const ProductDetail = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={handleBuyWithMP}
-                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl transition-all active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-full transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={
                     (product.tallas?.habilitadas?.length > 0 && !selectedTalla) ||
                     (product.colores?.length > 0 && !selectedColor)
@@ -380,7 +377,7 @@ const ProductDetail = () => {
                   href={(product.tallas?.habilitadas?.length === 0 || selectedTalla) && (product.colores?.length === 0 || selectedColor) ? waLink : '#'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-xl transition-all active:scale-95 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-3 rounded-full transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <FaWhatsapp size={20} />
                   <div className="flex flex-col items-center">
@@ -397,7 +394,8 @@ const ProductDetail = () => {
       {/* Related products */}
       {related.length > 0 && (
         <section className="pb-16">
-          <h2 className="text-xl font-bold mb-6">Productos relacionados</h2>
+          <p className="section-kicker mb-1">Seguí explorando</p>
+          <h2 className="section-title mb-6">Productos relacionados</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             {related.map((p) => <ProductCard key={p._id} product={p} />)}
           </div>

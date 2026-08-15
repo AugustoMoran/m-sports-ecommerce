@@ -126,20 +126,20 @@ const Products = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="page-wrap py-10">
       <SEO 
         title={pageTitle}
         description={`Explora nuestra colección de ${pageTitle.toLowerCase()} en M Sports. Calidad y rendimiento en cada artículo.`}
         schemaData={breadcrumbSchema}
       />
-      {/* Page header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            {search ? `Resultados para "${search}"` : 'Productos'}
+          <p className="section-kicker mb-1">Catálogo</p>
+          <h1 className="section-title">
+            {search ? `Resultados para “${search}”` : pageTitle}
           </h1>
           {data && (
-            <p className="text-sm text-gray-500 mt-1">{data.total} productos encontrados</p>
+            <p className="text-sm text-gray-500 mt-1.5">{data.total} productos encontrados</p>
           )}
         </div>
         <button
@@ -151,19 +151,18 @@ const Products = () => {
         </button>
       </div>
 
-      <div className="flex gap-6">
-        {/* Sidebar filters */}
+      <div className="flex gap-8">
         <aside className={`w-56 flex-shrink-0 ${filtersOpen ? 'block' : 'hidden md:block'}`}>
-          <div className="card p-4 sticky top-20 space-y-5">
+          <div className="card p-5 sticky top-24 space-y-6">
             <div>
-              <h3 className="font-semibold text-sm mb-3">Ordenar por</h3>
+              <h3 className="font-display font-semibold text-sm mb-3">Ordenar por</h3>
               <div className="space-y-1">
                 {SORT_OPTIONS.map((opt) => (
                   <button
                     key={opt.value}
                     onClick={() => updateFilter('sort', opt.value)}
-                    className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                      sort === opt.value ? 'bg-primary-50 text-primary-700 font-medium' : 'hover:bg-gray-50'
+                    className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors ${
+                      sort === opt.value ? 'bg-primary-400 text-ink font-semibold' : 'hover:bg-pearl text-gray-600'
                     }`}
                   >
                     {opt.label}
@@ -174,12 +173,12 @@ const Products = () => {
 
             {categories.length > 0 && (
               <div>
-                <h3 className="font-semibold text-sm mb-3">Categoría</h3>
+                <h3 className="font-display font-semibold text-sm mb-3">Categoría</h3>
                 <div className="space-y-1">
                   <button
                     onClick={() => updateFilter('categoria', '')}
-                    className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                      !categoria ? 'bg-primary-50 text-primary-700 font-medium' : 'hover:bg-gray-50'
+                    className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors ${
+                      !categoria ? 'bg-primary-400 text-ink font-semibold' : 'hover:bg-pearl text-gray-600'
                     }`}
                   >
                     Todas
@@ -188,8 +187,8 @@ const Products = () => {
                     <button
                       key={cat._id}
                       onClick={() => updateFilter('categoria', cat._id)}
-                      className={`w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors ${
-                        categoria === cat._id ? 'bg-primary-50 text-primary-700 font-medium' : 'hover:bg-gray-50'
+                      className={`w-full text-left px-3 py-2 rounded-xl text-sm transition-colors ${
+                        categoria === cat._id ? 'bg-primary-400 text-ink font-semibold' : 'hover:bg-pearl text-gray-600'
                       }`}
                     >
                       {cat.nombre}
@@ -212,11 +211,10 @@ const Products = () => {
           </div>
         </aside>
 
-        {/* Product grid */}
         <div className="flex-1 min-w-0">
           {allProducts.length === 0 && !isFetching ? (
-            <div className="text-center py-16 text-gray-400">
-              <p className="text-lg mb-2">No hay productos</p>
+            <div className="text-center py-20 text-gray-400">
+              <p className="font-display text-lg text-ink mb-2">No hay productos</p>
               <p className="text-sm">Intentá con otros filtros</p>
             </div>
           ) : (
@@ -228,16 +226,15 @@ const Products = () => {
                 {isFetching &&
                   Array.from({ length: 4 }).map((_, i) => (
                     <div key={i} className="card animate-pulse">
-                      <div className="aspect-square bg-gray-200" />
+                      <div className="aspect-square bg-pearl" />
                       <div className="p-3 space-y-2">
-                        <div className="h-3 bg-gray-200 rounded" />
-                        <div className="h-4 bg-gray-200 rounded w-3/4" />
-                        <div className="h-4 bg-gray-200 rounded w-1/2" />
+                        <div className="h-3 bg-pearl rounded" />
+                        <div className="h-4 bg-pearl rounded w-3/4" />
+                        <div className="h-4 bg-pearl rounded w-1/2" />
                       </div>
                     </div>
                   ))}
               </div>
-              {/* Sentinel for infinite scroll */}
               <div ref={sentinelRef} className="h-4" />
             </>
           )}

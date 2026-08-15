@@ -33,7 +33,7 @@ const Checkout = () => {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-16 text-center">
+      <div className="max-w-xl mx-auto px-4 py-20 text-center">
         <p className="text-gray-500 mb-4">Tu carrito está vacío.</p>
         <button onClick={() => navigate('/productos')} className="btn-primary">Ver productos</button>
       </div>
@@ -105,15 +105,14 @@ const Checkout = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="text-2xl font-bold mb-8">Finalizar compra</h1>
+      <p className="section-kicker mb-1">Checkout</p>
+      <h1 className="section-title mb-8">Finalizar compra</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        {/* Left: form */}
         <div className="lg:col-span-3 space-y-6">
-          {/* Guest data form */}
           {!user && (
             <div className="card p-6">
-              <h2 className="font-semibold text-lg mb-4">Tus datos</h2>
+              <h2 className="font-display font-semibold text-lg mb-4">Tus datos</h2>
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { name: 'nombre', label: 'Nombre', required: true },
@@ -150,7 +149,7 @@ const Checkout = () => {
 
           {/* Coupon */}
           <div className="card p-6">
-            <h2 className="font-semibold text-lg mb-4">Cupón de descuento</h2>
+            <h2 className="font-display font-semibold text-lg mb-4">Cupón de descuento</h2>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -170,17 +169,17 @@ const Checkout = () => {
 
           {/* Payment method */}
           <div className="card p-6">
-            <h2 className="font-semibold text-lg mb-4">Método de pago</h2>
+            <h2 className="font-display font-semibold text-lg mb-4">Método de pago</h2>
             <div className="space-y-3">
-              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${payMethod === 'mercadopago' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'}`}>
+              <label className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${payMethod === 'mercadopago' ? 'border-primary-400 bg-primary-50' : 'border-pearl-dark hover:border-gray-300'}`}>
                 <input type="radio" value="mercadopago" checked={payMethod === 'mercadopago'} onChange={() => setPayMethod('mercadopago')} className="sr-only" />
-                <FaCreditCard size={20} className={payMethod === 'mercadopago' ? 'text-primary-600' : 'text-gray-400'} />
+                <FaCreditCard size={20} className={payMethod === 'mercadopago' ? 'text-ink' : 'text-gray-400'} />
                 <div>
                   <p className="font-medium text-sm">Mercado Pago</p>
                   <p className="text-xs text-gray-500">Tarjeta, efectivo, transferencia</p>
                 </div>
               </label>
-              <label className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${payMethod === 'whatsapp' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'}`}>
+              <label className={`flex items-center gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${payMethod === 'whatsapp' ? 'border-green-500 bg-green-50' : 'border-pearl-dark hover:border-gray-300'}`}>
                 <input type="radio" value="whatsapp" checked={payMethod === 'whatsapp'} onChange={() => setPayMethod('whatsapp')} className="sr-only" />
                 <FaWhatsapp size={20} className={payMethod === 'whatsapp' ? 'text-green-600' : 'text-gray-400'} />
                 <div>
@@ -194,9 +193,9 @@ const Checkout = () => {
 
         {/* Right: order summary */}
         <div className="lg:col-span-2">
-          <div className="card p-6 sticky top-20">
-            <h2 className="font-semibold text-lg mb-4">Resumen</h2>
-            <ul className="divide-y divide-gray-100 mb-4">
+          <div className="card p-6 sticky top-24">
+            <h2 className="font-display font-semibold text-lg mb-4">Resumen</h2>
+            <ul className="divide-y divide-pearl-dark mb-4">
               {items.map((item) => {
                 const price = item.producto?.precioOferta || item.producto?.precio || 0;
                 const nombre = item.producto?.nombre || '';
@@ -224,7 +223,7 @@ const Checkout = () => {
             <button
               onClick={() => handleOrder(payMethod)}
               disabled={isLoading}
-              className={`w-full flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-xl transition-all active:scale-95 disabled:opacity-50 ${
+              className={`w-full flex items-center justify-center gap-2 font-bold px-6 py-3 rounded-full transition-all active:scale-95 disabled:opacity-50 ${
                 payMethod === 'whatsapp'
                   ? 'bg-green-500 hover:bg-green-400 text-white'
                   : 'btn-primary'
@@ -240,7 +239,7 @@ const Checkout = () => {
             {!user && (
               <p className="text-xs text-center text-gray-400 mt-3">
                 ¿Tenés cuenta?{' '}
-                <a href="/login" className="text-primary-600 hover:underline">Iniciá sesión</a> para guardar tu historial
+                <a href="/login" className="text-ink font-semibold hover:underline">Iniciá sesión</a> para guardar tu historial
               </p>
             )}
           </div>
